@@ -207,7 +207,9 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .xpin.tour{width:auto;min-width:18px;height:18px;border-radius:9px;background:#F2C14E;color:#14202A;font:800 11px/14px Inter,system-ui,sans-serif;text-align:center;padding:0 4px;display:flex;align-items:center;justify-content:center}
 .iw details{border-top:1px solid #0001;padding:6px 0}.iw details:first-of-type{border-top:0}.iw summary{cursor:pointer;line-height:1.35}
 .iw details p{margin:6px 0 2px;font-size:13px;line-height:1.45}.iw .iwm{color:#5b6b78;font-size:12px}
-.iw{color:#15212B;max-width:260px;font:13.5px/1.45 var(--f-body)}
+.iw{color:#15212B;max-width:260px;font:13.5px/1.45 var(--f-body);padding-bottom:4px}
+.iwh{color:#15212B;font:700 15px/1.3 var(--f-body);padding-top:10px;max-width:240px}
+.gm-style .gm-style-iw-c{padding-top:0}.gm-style .gm-style-iw-ch{padding-top:0}
 .iw b{font-size:15px}.iw .iwm{color:#5A6A77;font-size:12.5px}.iw ul{margin:6px 0;padding-left:16px}.iw p{margin:6px 0 0}
 #reportBtn{color:var(--muted)}
 /* radio */
@@ -223,10 +225,14 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .radio li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--rule);border-radius:10px}
 .radio li.cur{border-color:#3BB273}
 .radio .rname{flex:1;min-width:0;display:flex;flex-direction:column}.radio .rname small{color:var(--muted);font-size:11.5px}
+.radio .rst.live{color:#3BB273;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:10.5px}
 .radio li button{font-size:13px;padding:5px 12px;border-radius:7px;background:var(--bg);border:1px solid var(--rule);color:var(--ink);cursor:pointer}
 .radio li.cur button{background:#3BB273;border-color:#3BB273;color:#fff}
 .radio .rrow{display:flex;align-items:center;gap:10px;font-size:13px}.radio input[type=range]{flex:1}
 .radio .rclose{align-self:flex-end}
+.hsf{padding:0;margin:4px 0 10px}.hsf .chipbtn[aria-pressed="true"]{border-color:var(--accent);color:var(--ink)}
+.hsrow td{vertical-align:top}.hsrow .hsl{white-space:normal;font-family:var(--f-body)}.hsrow .note{display:block;font-size:12px;margin-top:2px}
+.radio ul{max-height:min(52vh,420px);overflow:auto}.radio li.rhid{border:0;padding:2px 10px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -235,7 +241,7 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 <div class="loading" id="loading" hidden></div>
 
 <header class="bar">
-  <div class="brand">Hydro<span>Guessr</span></div>
+  <div class="brand" title="HydroGuessr" aria-label="HydroGuessr">H<span>G</span></div>
   <button class="chip radiochip" id="radioBtn" data-i18n-title="radio_title"><span class="rdot" aria-hidden="true"></span><span data-i18n="radio_btn"></span></button>
   <div class="stats" id="stats" hidden>
     <span class="brk" aria-hidden="true"></span>
@@ -369,6 +375,11 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
       <button class="ghostbtn" id="exploreBtn" data-i18n="explore_btn"></button>
       <p class="note" data-i18n="explore_note"></p>
     </div>
+    <div class="box" id="highscores">
+      <h2 data-i18n="hs_title"></h2>
+      <div class="chips hsf" id="hsFilter"></div>
+      <div id="hsBox"></div>
+    </div>
     <div class="box" id="history">
       <h2 data-i18n="your_games"></h2>
       <div id="histSum"></div>
@@ -425,23 +436,26 @@ const STR={
  m_daily:["Daily challenge","Dagens utfordring"],m_daily_d:["The same 5 places and views for everyone today. Compare scores.","De samme 5 stedene og visningene for alle i dag. Sammenlign poengene."],
  m_area:["Business area","Forretningsområde"],
  m_extrusion:["Extrusion Expert","Extrusion Expert"],m_extrusion_d:["Only Hydro Extrusions sites: extrusion plants, building systems and precision tubing.","Bare Hydro Extrusions-anlegg: ekstrudering, byggsystemer og presisjonsrør."],
- m_blitz15:["Blitz 15","Lyn 15"],m_blitz15_d:["15 seconds per round. Trust your first instinct.","15 sekunder per runde. Stol på magefølelsen."],
+ m_blitz15:["Blitz 15","Blitz 15"],m_blitz15_d:["15 seconds per round. Trust your first instinct.","15 sekunder per runde. Stol på magefølelsen."],
  c_extrusion:["{n} Extrusions locations in this region. No bonus question in this mode.","{n} Extrusions-steder i denne regionen. Ingen bonusspørsmål i denne modusen."],
  gate_lbl:["Access code","Tilgangskode"],gate_ph:["Enter the code","Skriv inn koden"],gate_btn:["Enter","Gå inn"],
  gate_err:["That code isn't right. Check the spelling, including capital letters.","Koden er feil. Sjekk stavemåten, også store bokstaver."],m_area_d:["Play only Aluminium Metal, Extrusions, Recycling or Energy sites.","Spill bare anlegg innen aluminiummetall, ekstrudering, gjenvinning eller energi."],
  m_tourist:["Tinfoil Tourist","Termitt Turist"],m_tourist_d:["Famous sights near Hydro locations. Learn about each one on the reveal.","Kjente severdigheter nær Hydros anlegg. Lær litt om hver av dem når svaret vises."],
- m_blitz:["Blitz 30","Lyn 30"],m_blitz_d:["30 seconds per round. Faster guesses score more.","30 sekunder per runde. Raske gjetninger gir flere poeng."],
+ m_blitz:["Blitz 30","Blitz 30"],m_blitz_d:["30 seconds per round. Faster guesses score more.","30 sekunder per runde. Raske gjetninger gir flere poeng."],
  m_party:["Party","Gruppespill"],m_party_d:["2–6 players take turns on one screen.","2–6 spillere bytter på ved samme skjerm."],
  f_area:["Business area","Forretningsområde"],f_region:["Region","Region"],f_diff:["Difficulty","Vanskelighetsgrad"],f_spread:["Drop point","Startpunkt"],
  f_rounds:["Rounds","Runder"],f_players:["Players (comma-separated)","Spillere (skilt med komma)"],f_move:["Movement","Bevegelse"],
  move_lbl:["Allow moving around (looking around is always on)","Tillat å bevege seg rundt (du kan alltid se deg rundt)"],
  r_all:["Whole world","Hele verden"],r_no:["Norway only","Bare Norge"],r_abroad:["Outside Norway","Utenfor Norge"],r_europe:["Europe","Europa"],
- r_americas:["Americas","Amerika"],r_asia:["Asia, Middle East & Oceania","Asia, Midtøsten og Oseania"],
+ r_americas:["Americas","Amerika"],r_eurow:["Europe and rest of the world","Europa og resten av verden"],r_america:["America","Amerika"],r_asia:["Asia, Middle East & Oceania","Asia, Midtøsten og Oseania"],
  d_easy:["Easy: major sites with distinctive scenery","Lett: store anlegg med særpreget landskap"],d_normal:["Normal: all plants, mines and power","Normal: alle verk, gruver og kraftverk"],
  d_hard:["Hard: everything, offices included","Vanskelig: alt, også kontorer"],
  s_1:["At the site (within ~1 km)","Ved anlegget (innenfor ca. 1 km)"],s_5:["Nearby (within ~5 km)","I nærheten (innenfor ca. 5 km)"],s_15:["Wider area (within ~15 km)","Større område (innenfor ca. 15 km)"],
  start:["Start game","Start spillet"],
- your_games:["Your games","Dine spill"],your_stats:["Your stats","Din statistikk"],badges:["Badges","Merker"],
+ your_games:["Your games","Dine spill"],
+ hs_title:["High scores","Toppscorer"],hs_all:["All","Alle"],hs_empty:["Finish a game to set your first high score.","Fullfør et spill for å sette din første toppscore."],
+ hs_none:["No games at this difficulty yet.","Ingen spill på denne vanskelighetsgraden ennå."],hs_nodiff:["Daily challenge, Extrusion Expert and Tinfoil Tourist have no difficulty setting, so they show under All.","Dagens utfordring, Extrusion Expert og Termitt Turist har ingen vanskelighetsgrad, så de vises under Alle."],
+ hs_rounds:["{n} rounds","{n} runder"],your_stats:["Your stats","Din statistikk"],badges:["Badges","Merker"],
  explore_btn:["Explore all Hydro locations","Utforsk alle Hydro-stedene"],
  explore_note:["All 137 Hydro locations, coloured by business area (ringed if you've played them), plus the Tinfoil Tourist attractions you've visited.","Alle de 137 Hydro-stedene, fargelagt etter forretningsområde (med ring hvis du har spilt dem), og severdighetene du har besøkt i Termitt Turist."],
  x_tour:["{m} · {n} of {t} visited","{m} · {n} av {t} besøkt"],x_best:["Your best: {p} pts","Din beste: {p} poeng"],x_group:["{n} attractions here","{n} severdigheter her"],
@@ -449,10 +463,11 @@ const STR={
   "<b style=\"color:var(--ink)\">Ansvarsfraskrivelse:</b> HydroGuessr er et uoffisielt spill. Det er ikke utviklet, godkjent eller støttet av Norsk Hydro ASA, og er ikke ment for offentlig bruk eller distribusjon. Stedsnavnene kommer fra offentlige sider på hydro.com, og posisjonene er omtrentlige."],
  foot3:["Front-page photos © Hydro. Photographers: Anders Vindegg and Hans Fredrik Asbjørnsen.","Bilder på forsiden © Hydro. Fotografer: Anders Vindegg og Hans Fredrik Asbjørnsen."],
  foot2:["Street View imagery and maps © Google. Your API key, scores and badges stay in this browser.","Street View-bilder og kart © Google. API-nøkkelen, poengene og merkene dine blir i denne nettleseren."],
- radio_btn:["Radio","Radio"],radio_title:["Radio","Radio"],
- radio_note:["Live radio from Hydro countries. Green: on air. Red: not reachable right now.","Direktesendt radio fra Hydro-land. Grønn: på lufta. Rød: ikke tilgjengelig akkurat nå."],
+ radio_btn:["Radio Hydro","Radio Hydro"],radio_title:["Radio Hydro","Radio Hydro"],
+ r_hidden:["{n} more off air right now.","{n} til er ikke på lufta akkurat nå."],r_hidden1:["1 more off air right now.","1 til er ikke på lufta akkurat nå."],
+ radio_note:["Live radio from places where Hydro works. Only stations on air right now are shown.","Direktesendt radio fra steder der Hydro har virksomhet. Bare stasjoner som er på lufta akkurat nå, vises."],
  r_play:["Play","Spill"],r_stop:["Stop","Stopp"],r_vol:["Volume","Volum"],r_close:["Close","Lukk"],
- r_checking:["Checking…","Sjekker…"],r_online:["Online","På lufta"],r_offline:["Offline","Ikke tilgjengelig"],
+ r_checking:["Checking…","Sjekker…"],r_online:["Live","Live"],r_near:["Nearest Hydro site: {s}","Nærmeste Hydro-sted: {s}"],r_offline:["Offline","Ikke tilgjengelig"],
  r_failed:["{n} isn't available right now.","{n} er ikke tilgjengelig akkurat nå."],r_tap:["Tap anywhere to start the radio.","Trykk hvor som helst for å starte radioen."],
  lang_btn:["Norsk","English"],lang_title:["Bytt til norsk","Switch to English"],
  /* areas */
@@ -533,7 +548,7 @@ const HERO_NO=["Aluminiumsbolter på Karmøy","Fortykker i Brasils regnskog","Kr
  "Ekstruderte profiler på linja","Skrap som venter på omsmelting","Bauksitt på transportbåndet","Ved fjorden ved et Hydro-anlegg","Snø i fjellsidene","Barrer i støperiet","På vei gjennom elektrolysehallen","Lys over fjorden","Gule rør i Brasil","Et raffineri ved elva, sett ovenfra","Valsetråd på Karmøy"];
 const BADGE_NO={bullseye:["Blinkskudd","Gjett innenfor 1 km"],sharp:["Skarpskytter","Gjett innenfor 10 km"],fjord:["Fjordekspert","3 norske runder innenfor 25 km i ett spill"],
  insider:["Hydro-innsider","Få 5 bonuser for forretningsområde i ett spill"],globe:["Globetrotter","5 land og 15 000+ poeng i ett spill"],
- sight:["Severdighetsjeger","20 000+ poeng i Termitt Turist med 5 runder"],quick:["Lynrask","3 000+ poeng på under 8 sekunder i Lyn 15 eller Lyn 30"],
+ sight:["Severdighetsjeger","20 000+ poeng i Termitt Turist med 5 runder"],quick:["Lynrask","3 000+ poeng på under 8 sekunder i Blitz 15 eller Blitz 30"],
  near:["Nesten perfekt","5 250+ poeng i én runde"],streak:["Daglig vane","Spill dagens utfordring 3 dager på rad"],
  party:["Gruppespillvinner","Vinn et gruppespill"],marathon:["Maraton","Spill 50 runder totalt"]};
 const FACTS_NO={
@@ -1479,7 +1494,7 @@ const hintRegion=c=>HINT_REGION[c]||"Europe";
 const regionOf=s=>s.country==="Norway"?"Norway":REG.americas.includes(s.country)?"Americas":REG.asia.includes(s.country)?"Asia & Oceania":"Rest of Europe";
 function inRegion(s,p){
   if(p==="all")return true;if(p==="no")return s.country==="Norway";if(p==="abroad")return s.country!=="Norway";
-  if(p==="americas")return REG.americas.includes(s.country);if(p==="asia")return REG.asia.includes(s.country);
+  if(p==="americas"||p==="america")return REG.americas.includes(s.country);if(p==="eurow")return !REG.americas.includes(s.country);if(p==="asia")return REG.asia.includes(s.country);
   if(p==="europe")return !REG.americas.includes(s.country)&&!REG.asia.includes(s.country);
 }
 const inDiff=(s,d)=>d==="hard"?true:d==="normal"?s.area!=="O":EASY.has(s.town);
@@ -1565,17 +1580,45 @@ function renderHome(){
 const modeLabel=m=>m==="area"?(LANG==="no"?"Forretningsområde":"Business area"):m==="chain"?(LANG==="no"?"Verdikjede":"Value chain"):t("m_"+m);
 let histAll=false;
 function saveGame(entry){const h=store.json("hg-history",[]);h.unshift(entry);store.put("hg-history",h.slice(0,500))}
+/* which settings matter in each mode, shown under the score */
+const HAS_DIFF=new Set(["classic","blitz","blitz15"]);
+function cfgLine(g){
+  const c=g.cfg;if(!c)return g.note||"";
+  if(g.mode==="daily")return g.note||"";
+  const short=k=>t(k).split(/[:(]/)[0].trim(),parts=[];
+  if(c.pool)parts.push(short("r_"+c.pool));
+  if(HAS_DIFF.has(g.mode)&&c.diff)parts.push(short("d_"+c.diff));
+  if(g.mode!=="tourist"&&c.spread)parts.push(short("s_"+c.spread));
+  if(c.rounds)parts.push(t("hs_rounds",{n:c.rounds}));
+  return parts.join(" · ");
+}
+const gameDate=g=>{const d=new Date(g.t);return d.toLocaleDateString(LOCALE,{day:"numeric",month:"short",year:d.getFullYear()===new Date().getFullYear()?undefined:"numeric"})};
+let hsDiff=store.get("hg-hsdiff")||"all";
+function renderHighscores(){
+  $("#hsFilter").innerHTML=["all","easy","normal","hard"].map(d=>`<button class="chipbtn" data-d="${d}" aria-pressed="${hsDiff===d}">${esc(d==="all"?t("hs_all"):t("d_"+d).split(":")[0])}</button>`).join("");
+  $("#hsFilter").querySelectorAll("button").forEach(b=>b.onclick=()=>{hsDiff=b.dataset.d;store.set("hg-hsdiff",hsDiff);renderHighscores()});
+  const h=store.json("hg-history",[]).filter(g=>g.mode!=="party"&&!(g.mode==="daily"&&g.note===t("practice")));
+  if(!h.length){$("#hsBox").innerHTML=`<p class="note">${t("hs_empty")}</p>`;return}
+  const order=["classic","blitz15","blitz","extrusion","tourist","daily","area","chain"];
+  const best={};
+  h.forEach(g=>{
+    if(hsDiff!=="all"&&(!HAS_DIFF.has(g.mode)||!g.cfg||g.cfg.diff!==hsDiff))return;
+    if(!best[g.mode]||g.total>best[g.mode].total)best[g.mode]=g});
+  const modes=Object.keys(best).sort((a,b)=>(order.indexOf(a)+99)%99-(order.indexOf(b)+99)%99);
+  if(!modes.length){$("#hsBox").innerHTML=`<p class="note">${t("hs_none")}</p>`;return}
+  $("#hsBox").innerHTML=`<table><thead><tr><th>${t("h_mode")}</th><th class="num">${t("h_score")}</th></tr></thead><tbody>${
+    modes.map(m=>{const g=best[m],line=cfgLine(g);return `<tr class="hsrow"><td>${esc(modeLabel(m))}<span class="note">${esc(gameDate(g))}</span></td><td class="num"><b>${fmt(g.total)}</b> <span class="note" style="display:inline">/ ${fmt(g.max)}</span>${line?`<span class="note hsl">${esc(line)}</span>`:""}</td></tr>`}).join("")
+  }</tbody></table>${hsDiff!=="all"?`<p class="note">${t("hs_nodiff")}</p>`:""}`;
+}
 function renderHistory(){
+  renderHighscores();
   const h=store.json("hg-history",[]);
   $("#histClear").hidden=!h.length;
   if(!h.length){$("#histSum").innerHTML="";$("#histBox").innerHTML=`<p class="note">${t("h_empty")}</p>`;$("#histMore").hidden=true;return}
-  const best={};h.forEach(g=>{if(g.mode==="party")return;const pct=g.total/g.max;if(!best[g.mode]||pct>best[g.mode].pct)best[g.mode]={pct,g}});
-  $("#histSum").innerHTML=`<div class="tags"><span class="tag">${h.length>1?t("h_played",{n:h.length}):t("h_played1")}</span>${
-    Object.entries(best).map(([m,b])=>`<span class="tag a">${t("h_best",{m:esc(modeLabel(m)),a:fmt(b.g.total),b:fmt(b.g.max)})}</span>`).join("")}</div>`;
+  $("#histSum").innerHTML=`<div class="tags"><span class="tag">${h.length>1?t("h_played",{n:h.length}):t("h_played1")}</span></div>`;
   const rows=(histAll?h:h.slice(0,8)).map(g=>{
-    const d=new Date(g.t),date=d.toLocaleDateString(LOCALE,{day:"numeric",month:"short",year:d.getFullYear()===new Date().getFullYear()?undefined:"numeric"});
-    const time=d.toLocaleTimeString(LOCALE,{hour:"2-digit",minute:"2-digit"});
-    return`<tr><td>${esc(date)}<br><span class="note">${esc(time)}</span></td><td>${esc(modeLabel(g.mode))}${g.note?`<br><span class="note">${esc(g.note)}</span>`:""}</td>
+    const d=new Date(g.t),time=d.toLocaleTimeString(LOCALE,{hour:"2-digit",minute:"2-digit"}),line=g.mode==="party"?g.note:cfgLine(g);
+    return`<tr><td>${esc(gameDate(g))}<br><span class="note">${esc(time)}</span></td><td>${esc(modeLabel(g.mode))}${line?`<br><span class="note">${esc(line)}</span>`:""}</td>
       <td class="num">${fmt(g.total)}<br><span class="note">${Math.round(g.total/g.max*100)}%</span></td><td>${g.sq||""}</td></tr>`}).join("");
   $("#histBox").innerHTML=`<div style="overflow-x:auto"><table><thead><tr><th>${t("h_when")}</th><th>${t("h_mode")}</th><th class="num">${t("h_score")}</th><th>${t("h_rounds")}</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   $("#histMore").hidden=h.length<=8;$("#histMore").textContent=histAll?t("h_fewer"):t("h_all",{n:h.length});
@@ -1599,7 +1642,15 @@ $("#langBtn").onclick=()=>{store.set("hg-lang",LANG==="no"?"en":"no");location.r
 let MODE=store.get("hg-mode")||"classic";
 if(MODE==="area")MODE="extrusion";
 if(!["classic","daily","extrusion","tourist","blitz","blitz15","party"].includes(MODE))MODE="classic";
-function setMode(m){MODE=m;store.set("hg-mode",m);
+/* Extrusion Expert has its own region choices */
+const POOL_STD=["all","no","abroad","europe","americas","asia"],POOL_EXT=["all","eurow","america"];
+function setPoolOptions(m){
+  const ext=m==="extrusion",want=ext?POOL_EXT:POOL_STD,sel=$("#pool");
+  if(sel.dataset.set===(ext?"ext":"std"))return;
+  sel.innerHTML=want.map(v=>`<option value="${v}">${esc(t("r_"+v))}</option>`).join("");sel.dataset.set=ext?"ext":"std";
+  const saved=store.get(ext?"hg-pool-ext":"hg-pool");sel.value=want.includes(saved)?saved:"all";
+}
+function setMode(m){MODE=m;store.set("hg-mode",m);setPoolOptions(m);
   document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===m)));
   document.querySelectorAll("#opts [data-for]").forEach(f=>f.hidden=!f.dataset.for.split(" ").includes(m));
   $("#opts").hidden=m==="daily";updateCount();
@@ -1611,7 +1662,8 @@ function updateCount(){
     MODE==="tourist"?t("c_tourist",{n:TOURS.filter(x=>inRegion(x,pool)&&tourView(x.town)).length}):t("c_pool",{n,t:SITES.length});
 }
 document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-["pool","diff","spread","rounds","players"].forEach(id=>{const v=store.get("hg-"+id);if(v)$("#"+id).value=v;$("#"+id).addEventListener("change",updateCount)});
+["diff","spread","rounds","players"].forEach(id=>{const v=store.get("hg-"+id);if(v)$("#"+id).value=v;$("#"+id).addEventListener("change",updateCount)});
+$("#pool").addEventListener("change",()=>{store.set(MODE==="extrusion"?"hg-pool-ext":"hg-pool",$("#pool").value);updateCount()});
 if(!store.get("hg-players")&&LANG==="no")$("#players").value="Spiller 1, Spiller 2";
 const savedKey=API_KEY||store.get("hg-key");if(savedKey)$("#key").value=savedKey;if(API_KEY)$("#keyField").hidden=true;
 
@@ -1680,13 +1732,39 @@ function svReq(loc,radius,pref){
 async function look(loc,radius,pref){
   try{const {data}=await svc.getPanorama(svReq(loc,radius,pref));
     if(data&&data.location&&data.links&&data.links.length>0&&!(BAD.has(data.location.pano)&&!(G&&G.mode==="daily")))
-      return {pano:data.location.pano,lat:data.location.latLng.lat(),lng:data.location.latLng.lng(),date:data.imageDate||"",best:pref==="best"}}catch(e){}
+      return {pano:data.location.pano,lat:data.location.latLng.lat(),lng:data.location.latLng.lng(),date:data.imageDate||"",best:pref==="best",
+        desc:[data.location.description,data.location.shortDescription].filter(Boolean).join(" ")}}catch(e){}
   return null;
 }
+/* ---- no starting spots inside tunnels ----
+   1. Google labels many tunnel panoramas with the tunnel's name, in the local language.
+   2. A tiny Street View Static image (96×64 px) of the spot: a tunnel is dark all over, the open air has a bright sky.
+      This check needs the Street View Static API enabled on the key; if it isn't, it switches itself off. */
+const TUNNEL_RE=/tunnel|túnel|tunel|tünel|galleria|traforo|alagút|tunnelen|tunneln|tunneli|トンネル|터널|隧道/i;
+let darkCheck=true;
+async function looksDark(pano){
+  /* skipped in the daily challenge, so every player gets the same spots whatever their key allows */
+  if(!darkCheck||!apiKey||(G&&G.mode==="daily"))return false;
+  try{
+    const r=await fetch(`https://maps.googleapis.com/maps/api/streetview?size=96x64&pano=${encodeURIComponent(pano)}&fov=120&pitch=12&heading=0&return_error_code=true&key=${encodeURIComponent(apiKey)}`);
+    if(!r.ok){if(r.status===403||r.status===401)darkCheck=false;return false}
+    const img=await createImageBitmap(await r.blob());
+    const c=document.createElement("canvas");c.width=96;c.height=64;const x=c.getContext("2d");x.drawImage(img,0,0,96,64);
+    const d=x.getImageData(0,0,96,64).data;let top=0,all=0,nt=0,na=0;
+    for(let i=0;i<d.length;i+=4){const l=0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2];all+=l;na++;if(i<96*21*4){top+=l;nt++}}
+    return top/nt<58&&all/na<72;
+  }catch(e){darkCheck=false;return false}
+}
+async function lookOpen(loc,radius,pref){
+  const l=await look(loc,radius,pref);if(!l)return null;
+  if(TUNNEL_RE.test(l.desc||""))return null;
+  if(await looksDark(l.pano))return null;
+  return l;
+}
 async function findSpot(site,spread,r){
-  const tries=spread<=1?4:6;
-  for(let k=0;k<tries;k++){const l=await look(offset(site,spread,r),Math.max(500,spread*400));if(l)return l}
-  return (await look({lat:site.lat,lng:site.lon},spread*1000+3000))||(await look({lat:site.lat,lng:site.lon},40000));
+  const tries=spread<=1?6:8;
+  for(let k=0;k<tries;k++){const l=await lookOpen(offset(site,spread,r),Math.max(500,spread*400));if(l)return l}
+  return (await lookOpen({lat:site.lat,lng:site.lon},spread*1000+3000))||(await lookOpen({lat:site.lat,lng:site.lon},40000));
 }
 const TOUR_FAR=new Set(["Furebergsfossen","Karmsund Bridge","Låtefossen","Nigardsbreen","Feigumfossen","Hohenzollern Bridge","Triberg Waterfalls","Freiburg Minster","Drachenfels","Riegersburg","Cinquantenaire Arch","Strépy-Thieu Boat Lift","Erasmus Bridge","Bourscheid Castle","Arc de Triomphe","Sacré-Cœur","Château de Pierrefonds","Saint-Jean-des-Vignes Abbey","Carcassonne","Montserrat","Clérigos Tower","25 de Abril Bridge","Pena Palace","Bosco Verticale","Rocca Calascio","Chain Bridge","Esztergom Basilica","UFO Bridge","Devín Castle","Arcos da Lapa","Cathedral of Learning","Amicalola Falls","Duke Chapel","St. Augustine Lighthouse","Notre Dame Golden Dome","Willis Tower","Big Four Bridge, Sidney","Griffith Observatory","Reunion Tower","Camelback Mountain","Bridal Veil Falls","Absolute World Towers","Saint Joseph's Oratory","Olympic Stadium, Montreal","Cerro de la Silla","Faro del Comercio","Burj Al Arab","Dubai Frame","Bahrain World Trade Center","Blue Mosque","Galata Tower","Kocatepe Mosque","Tokyo Tower","Tokyo Skytree","Marina Bay Sands","Amber Fort","Preikestolen","Vettisfossen","Gaustatoppen","Multnomah Falls","Niagara Falls","Sugarloaf Mountain",
  "Hollywood Sign","Eiffel Tower","Atomium","Hohensalzburg Fortress","Bratislava Castle","Château de Chillon","Vianden Castle"]);
@@ -1781,7 +1859,7 @@ function tourPitch(spot,a){
 /* ===================== GAME FLOW ===================== */
 async function startGame(){
   $("#err").hidden=true;
-  ["pool","diff","spread","rounds","players"].forEach(id=>store.set("hg-"+id,$("#"+id).value));
+  ["diff","spread","rounds","players"].forEach(id=>store.set("hg-"+id,$("#"+id).value));store.set(MODE==="extrusion"?"hg-pool-ext":"hg-pool",$("#pool").value);
   $("#start").hidden=true;$("#loading").hidden=false;$("#loading").textContent=t("loading_maps");
   if(!await ensureMaps())return;
   const m=MODE,daily=m==="daily";
@@ -1800,6 +1878,7 @@ async function startGame(){
   G={mode:m,rand,bonus:m!=="extrusion",blitzSec:m==="blitz"?30:m==="blitz15"?15:0,spread:daily?5:+$("#spread").value,rounds,turning:daily?true:$("#move").checked,queue,round:0,svOk:false,
      players:names.map(n=>({name:n,results:[]})),pIdx:0,newBadges:[],phase:"load",
      setup:(m==="classic"||m==="blitz"||m==="blitz15"||m==="party")?`${poolTxt} · ${diffTxt}`:(m==="extrusion"||m==="tourist")?poolTxt:""};
+  G.cfg={pool,diff:$("#diff").value,spread:$("#spread").value,rounds};
   G.areaLabel="";
   nextRound();
 }
@@ -2031,7 +2110,7 @@ function finish(){
   const label=modeLabel(G.mode);
   if(solo){
     const practice=G.mode==="daily"&&G.dailyRecorded;
-    saveGame({t:Date.now(),mode:G.mode,total:tot(p0),max,sq:res.map(r=>square(r.pts)).join(""),
+    saveGame({t:Date.now(),mode:G.mode,total:tot(p0),max,sq:res.map(r=>square(r.pts)).join(""),cfg:G.cfg,
       note:G.mode==="daily"?(practice?t("practice"):today()):G.setup});
   }else saveGame({t:Date.now(),mode:"party",total:G.ranked[0].t,max,sq:"",note:t("won_by",{name:G.ranked[0].p.name,n:G.players.length})});
   const shareTxt=solo?`HydroGuessr ${label}${G.mode==="daily"?" "+today():""} · ${fmt(tot(p0))}/${fmt(max)}\n${res.map(r=>square(r.pts)).join("")}`
@@ -2067,6 +2146,11 @@ function goHome(){stopTimer();clearOverlays();G=null;document.body.classList.rem
 const AREA_COLORS={M:"#E5482F",B:"#D9A13B",E:"#4FA3E0",R:"#5CC48A",P:"#B892FF",O:"#C9D1D7"};
 const TOUR_COLOR="#F2C14E";
 let xmap=null,xMarkers=[],xInfo=null,xShow=new Set([...Object.keys(AREA_COLORS),"T"]);
+function iwOpen(title,body,anchor){
+  const h=document.createElement("div");h.className="iwh";h.textContent=title;
+  if(xInfo.setHeaderContent)xInfo.setHeaderContent(h);else if(xInfo.setOptions)xInfo.setOptions({headerContent:h});
+  xInfo.setContent(`<div class="iw">${body}</div>`);xInfo.open({map:xmap,anchor});
+}
 /* visited attractions close to each other (same city or area) share one dot */
 function tourGroups(km_=30){
   const list=TOURS.filter(a=>a.town in tseen),groups=[];
@@ -2075,9 +2159,11 @@ function tourGroups(km_=30){
     else groups.push({lat:a.lat,lng:a.lon,items:[a]})});
   return groups;
 }
+function tourTitle(g){return g.items.length===1?siteName(g.items[0]):t("x_group",{n:g.items.length})}
 function tourInfo(g){
-  const one=g.items.length===1;
-  return `<div class="iw">${one?"":`<b>${esc(t("x_group",{n:g.items.length}))}</b>`}${g.items.map(a=>`<details${one?" open":""}><summary><b>${esc(siteName(a))}</b><br><span class="iwm">${esc(countryN(a.country))} · ${esc(t("x_best",{p:fmt(tseen[a.town]||0)}))}</span></summary><p>${esc(descOf(a))}</p></details>`).join("")}</div>`;
+  const one=g.items.length===1,a0=g.items[0];
+  if(one)return `<span class="iwm">${esc(countryN(a0.country))} · ${esc(t("x_best",{p:fmt(tseen[a0.town]||0)}))}</span><p>${esc(descOf(a0))}</p>`;
+  return g.items.map(a=>`<details><summary><b>${esc(siteName(a))}</b><br><span class="iwm">${esc(countryN(a.country))} · ${esc(t("x_best",{p:fmt(tseen[a.town]||0)}))}</span></summary><p>${esc(descOf(a))}</p></details>`).join("");
 }
 function renderChips(){
   $("#xChips").innerHTML=Object.keys(AREA_COLORS).map(a=>`<button class="chipbtn" data-a="${a}" aria-pressed="${xShow.has(a)}"><i style="background:${AREA_COLORS[a]}"></i>${esc(areaN(a))} · ${SITES.filter(s=>s.area===a).length}</button>`).join("")
@@ -2101,16 +2187,15 @@ async function openExplore(){
     const marker=new Marker({map:xShow.has(s.area)?xmap:null,position:{lat:s.lat,lng:s.lon},content:el,title:s.town});
     marker.addListener("click",()=>{
       const f=factOf(s);
-      xInfo.setContent(`<div class="iw"><b>${esc(s.town)}</b><br><span class="iwm">${esc(countryN(s.country))} · ${esc(areaN(s.area))}${seen.has(s.town)?" · "+esc(t("x_played")):""}</span>
-        <ul>${s.units.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>${f?`<p>${esc(f)}</p>`:""}</div>`);
-      xInfo.open({map:xmap,anchor:marker});
+      iwOpen(s.town,`<span class="iwm">${esc(countryN(s.country))} · ${esc(areaN(s.area))}${seen.has(s.town)?" · "+esc(t("x_played")):""}</span>
+        <ul>${s.units.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>${f?`<p>${esc(f)}</p>`:""}`,marker);
     });
     xMarkers.push({marker,site:s});
   });
   tourGroups().forEach(g=>{
     const el=document.createElement("div");el.className="xpin tour";el.textContent=g.items.length>1?g.items.length:"";
     const marker=new Marker({map:xShow.has("T")?xmap:null,position:{lat:g.lat,lng:g.lng},content:el,title:g.items.map(a=>siteName(a)).join(", "),zIndex:5});
-    marker.addListener("click",()=>{xInfo.setContent(tourInfo(g));xInfo.open({map:xmap,anchor:marker})});
+    marker.addListener("click",()=>iwOpen(tourTitle(g),tourInfo(g),marker));
     xMarkers.push({marker,site:{area:"T"}});
   });
 }
@@ -2121,11 +2206,25 @@ $("#xClose").onclick=()=>{$("#explore").hidden=true;if(xInfo)xInfo.close()};
 /* ===================== RADIO =====================
    Live streams looked up by name in the free Radio Browser directory (radio-browser.info), so the
    stream address stays current. Each station gets a status dot: green if it's on air, red if not. */
+const C=(names,must,fallback)=>({names,must,fallback});
 const STATIONS=[
-  {id:"fjords",label:"Radio Fjords (Norway)",names:["NRK P1 Sogn og Fjordane (Høy kvalitet MP3)","NRK P1 Sogn og Fjordane"],must:/sogn og fjordane/i,cc:"NO",
-   fallback:"https://lyd.nrk.no/nrk_radio_p1_sogn_og_fjordane_mp3_h"},
-  {id:"alumina",label:"Radio Alumina (Brazil)",names:["Radio Clube do Pará","Rádio Clube do Pará","Clube do Pará"],must:/clube.*par[aá]/i,cc:"BR"},
-  {id:"texas",label:"Radio Texas (USA)",names:["97.1 The Eagle Rocks","97.1 The Eagle","KEGL"],must:/eagle|kegl/i,cc:"US"}
+  {id:"fjords",site:"Årdal",label:"Radio Fjords (Norway)",cc:"NO",cands:[C(["NRK P1 Sogn og Fjordane (Høy kvalitet MP3)","NRK P1 Sogn og Fjordane"],/sogn og fjordane/i,"https://lyd.nrk.no/nrk_radio_p1_sogn_og_fjordane_mp3_h")]},
+  {id:"alumina",site:"Barcarena (Alunorte)",label:"Radio Alumina (Brazil)",cc:"BR",cands:[C(["Radio Clube do Pará","Rádio Clube do Pará","Clube do Pará"],/clube.*par[aá]/i)]},
+  {id:"texas",site:"Commerce, TX",label:"Radio Texas (USA)",cc:"US",cands:[C(["97.1 The Eagle Rocks","97.1 The Eagle","KEGL"],/eagle|kegl/i)]},
+  {id:"wasatch",site:"Spanish Fork, UT",label:"Radio Wasatch (USA)",cc:"US",cands:[C(["KRCL 90.9 FM","KRCL"],/krcl/i),C(["KUER 90.1","KUER"],/kuer/i)]},
+  {id:"coal",site:"Cressona, PA",label:"Radio Coal Country (USA)",cc:"US",cands:[C(["T102","T-102","WAVT"],/t-?102|wavt/i),C(["WHYY","WHYY-FM"],/whyy/i)]},
+  {id:"fehervar",site:"Székesfehérvár",label:"Radio Fehérvár (Hungary)",cc:"HU",cands:[C(["Vörösmarty Rádió","Vorosmarty Radio"],/v[öo]r[öo]smarty/i),C(["Petőfi Rádió","MR2 Petőfi Rádió","Petofi Radio"],/pet[őo]fi/i)]},
+  {id:"danube",site:"Bellenberg",label:"Radio Danube (Germany)",cc:"DE",cands:[C(["Donau 3 FM","DONAU 3 FM"],/donau ?3/i),C(["Bayern 3","BAYERN 3"],/bayern ?3/i)]},
+  {id:"marne",site:"Bonneuil-sur-Marne",label:"Radio Marne (France)",cc:"FR",cands:[C(["FIP"],/^fip$|^fip\b(?! ?(rock|jazz|groove|monde|nouveau|reggae|electro|metal|hip|pop))/i)]},
+  {id:"textile",site:"Łódź",label:"Radio Textile (Poland)",cc:"PL",cands:[C(["Radio Łódź","Radio Lodz"],/radio [łl][óo]d[źz]/i)]},
+  {id:"tagus",site:"Prior Velho",label:"Radio Tagus (Portugal)",cc:"PT",cands:[C(["Rádio Comercial","Radio Comercial"],/comercial/i),C(["Antena 1","RTP Antena 1"],/antena ?1/i)]},
+  {id:"daurada",site:"La Selva del Camp",label:"Radio Costa Daurada (Spain)",cc:"ES",cands:[C(["Catalunya Ràdio","Catalunya Radio"],/catalunya r[àa]dio/i),C(["iCat","iCat FM"],/icat/i)]},
+  {id:"abruzzo",site:"Atessa",label:"Radio Abruzzo (Italy)",cc:"IT",cands:[C(["Rai Radio 2","Radio 2 Rai","Rai Radio2"],/rai ?radio ?2|radio ?2 rai/i)]},
+  {id:"pangyo",site:"Pangyo",label:"Radio Pangyo (South Korea)",cc:"KR",cands:[C(["Arirang Radio","Arirang"],/arirang/i),C(["TBS eFM","tbs eFM"],/efm/i)]},
+  {id:"sakura",site:"Tokyo",label:"Radio Sakura (Japan)",cc:"JP",cands:[C(["NHK World Radio Japan","NHK World","NHK WORLD-JAPAN"],/nhk/i)]},
+  {id:"forge",site:"Finspång",label:"Radio Forge (Sweden)",cc:"SE",cands:[C(["P4 Östergötland","SR P4 Östergötland","Sveriges Radio P4 Östergötland"],/p4 [öo]sterg[öo]tland/i)]},
+  {id:"bosphorus",site:"Istanbul",label:"Radio Bosphorus (Turkey)",cc:"TR",cands:[C(["Açık Radyo","Acik Radyo"],/a[çc][ıi]k radyo/i),C(["TRT FM"],/trt ?fm/i)]},
+  {id:"hron",site:"Žiar nad Hronom",label:"Radio Hron Valley (Slovakia)",cc:"SK",cands:[C(["Rádio Regina Stred","Radio Regina Stred"],/regina stred/i),C(["Rádio Slovensko","Radio Slovensko"],/r[áa]dio slovensko/i)]}
 ];
 const RB_HOSTS=["de1","de2","fi1","nl1","at1"].map(h=>`https://${h}.api.radio-browser.info`);
 const radio={audio:null,cur:null,hls:null,state:{},info:{},wantOn:store.get("hg-radio-on")==="1",station:store.get("hg-radio")||STATIONS[0].id};
@@ -2135,22 +2234,27 @@ async function rbGet(path){
   return null;
 }
 async function rbFind(st){
-  const key="hg-rb-"+st.id,c=store.json(key,null);
+  const key="hg-rb2-"+st.id,c=store.json(key,null);
   if(c&&Date.now()-c.at<12*3600e3)return c;
-  let best=null;
-  for(const n of st.names){
-    for(const exact of [true,false]){
-      const list=await rbGet(`/json/stations/search?name=${encodeURIComponent(n)}&nameExact=${exact}&countrycode=${st.cc}&hidebroken=false&order=votes&reverse=true&limit=20`);
-      if(!list||!list.length)continue;
-      const ok=list.filter(x=>st.must.test(x.name)&&(x.url_resolved||x.url));
-      const score=x=>((x.url_resolved||x.url).startsWith("https:")?4:0)+(x.lastcheckok?2:0)+(/mp3/i.test(x.codec||"")?1:0);
-      ok.sort((a,b)=>score(b)-score(a));
-      if(ok.length){best=ok[0];break}
+  const score=x=>((x.url_resolved||x.url).startsWith("https:")?4:0)+(x.lastcheckok?2:0)+(/mp3|aac/i.test(x.codec||"")?1:0);
+  let best=null,fb=null;
+  for(const cand of st.cands){
+    if(!fb&&cand.fallback)fb=cand.fallback;
+    for(const n of cand.names){
+      for(const exact of [true,false]){
+        const list=await rbGet(`/json/stations/search?name=${encodeURIComponent(n)}&nameExact=${exact}&countrycode=${st.cc}&hidebroken=false&order=votes&reverse=true&limit=25`);
+        const ok=(list||[]).filter(x=>cand.must.test(x.name)&&(x.url_resolved||x.url));
+        ok.sort((a,b)=>score(b)-score(a)||(b.votes||0)-(a.votes||0));
+        /* a stream the browser can't play on a secure page is no use: keep looking */
+        const good=ok.find(x=>!(location.protocol==="https:"&&(x.url_resolved||x.url).startsWith("http:")));
+        if(good){best=good;break}
+      }
+      if(best)break;
     }
     if(best)break;
   }
-  const r=best?{at:Date.now(),uuid:best.stationuuid,url:best.url_resolved||best.url,ok:!!best.lastcheckok,hls:!!best.hls||/\.m3u8/i.test(best.url_resolved||"")}
-            :(st.fallback?{at:Date.now(),url:st.fallback,ok:true,hls:false}:null);
+  const r=best?{at:Date.now(),uuid:best.stationuuid,name:best.name,url:best.url_resolved||best.url,ok:!!best.lastcheckok,hls:!!best.hls||/\.m3u8/i.test(best.url_resolved||"")}
+            :(fb?{at:Date.now(),url:fb,ok:true,hls:false}:null);
   if(r)store.put(key,r);
   return r;
 }
@@ -2164,7 +2268,9 @@ function probe(url){
     a.src=url;try{a.load()}catch(e){end(null)}
   });
 }
+const RSTAT=store.json("hg-rstat",{});
 async function checkStation(st){
+  const c=RSTAT[st.id];if(c&&Date.now()-c.at<30*60e3){radio.state[st.id]=c.v;renderRadio();return}
   radio.state[st.id]="checking";renderRadio();
   const info=await rbFind(st);radio.info[st.id]=info;
   if(!info){radio.state[st.id]="off";renderRadio();return}
@@ -2172,11 +2278,19 @@ async function checkStation(st){
   const p=await probe(info.url);
   radio.state[st.id]=p===null?(info.ok?"on":"off"):(p?"on":"off");renderRadio();
 }
+function saveStat(id){if(radio.state[id]==="on"||radio.state[id]==="off"){RSTAT[id]={v:radio.state[id],at:Date.now()};store.put("hg-rstat",RSTAT)}}
+async function checkAll(){
+  const todo=STATIONS.filter(st=>radio.state[st.id]!=="on"&&radio.state[st.id]!=="checking");
+  let i=0;const worker=async()=>{while(i<todo.length){const st=todo[i++];await checkStation(st);saveStat(st.id)}};
+  await Promise.all([worker(),worker(),worker(),worker()]);
+}
 function dotClass(id){const v=radio.state[id];return v==="on"?"rdot on":v==="off"?"rdot off":"rdot"}
 function renderRadio(){
-  $("#rList").innerHTML=STATIONS.map(st=>{const cur=radio.cur===st.id,v=radio.state[st.id];
-    return `<li class="${cur?"cur":""}"><span class="${dotClass(st.id)}" aria-hidden="true"></span><span class="rname">${esc(st.label)}<small>${t(v==="on"?"r_online":v==="off"?"r_offline":"r_checking")}</small></span>
-      <button data-id="${st.id}">${t(cur?"r_stop":"r_play")}</button></li>`}).join("");
+  const shown=STATIONS.filter(st=>radio.state[st.id]!=="off"||radio.cur===st.id),hidden=STATIONS.length-shown.length;
+  $("#rList").innerHTML=shown.map(st=>{const cur=radio.cur===st.id,v=radio.state[st.id];
+    return `<li class="${cur?"cur":""}"><span class="${dotClass(st.id)}" aria-hidden="true"></span><span class="rname">${esc(st.label)}<small>${esc(t("r_near",{s:st.site}))}</small><small class="rst${v==="on"?" live":""}">${t(v==="on"?"r_online":v==="off"?"r_offline":"r_checking")}</small></span>
+      <button data-id="${st.id}">${t(cur?"r_stop":"r_play")}</button></li>`}).join("")
+    +(hidden?`<li class="rhid"><small>${hidden===1?t("r_hidden1"):t("r_hidden",{n:hidden})}</small></li>`:"");
   $("#rList").querySelectorAll("button").forEach(b=>b.onclick=()=>radio.cur===b.dataset.id?stopRadio():playRadio(b.dataset.id));
   const playing=!!radio.cur;
   [$("#radioBtn"),$("#radioHome")].forEach(b=>{b.classList.toggle("playing",playing);b.querySelector(".rdot").className=playing?dotClass(radio.cur):"rdot"});
@@ -2195,7 +2309,7 @@ async function playRadio(id){
   const a=radio.audio||(radio.audio=new Audio());
   a.volume=+(store.get("hg-radio-vol")||0.6);
   a.onplaying=()=>{radio.state[id]="on";renderRadio()};
-  a.onerror=()=>{if(radio.cur!==id)return;radio.state[id]="off";radio.cur=null;renderRadio();toast(t("r_failed",{n:st.label}))};
+  a.onerror=()=>{if(radio.cur!==id)return;radio.state[id]="off";saveStat(id);radio.cur=null;renderRadio();toast(t("r_failed",{n:st.label}))};
   try{
     if(info.hls&&!a.canPlayType("application/vnd.apple.mpegurl")){const H=await loadHls();radio.hls=new H();radio.hls.loadSource(info.url);radio.hls.attachMedia(a)}
     else a.src=info.url;
@@ -2211,7 +2325,7 @@ function stopRadio(keep){
 function openRadio(){
   const r=$("#radio");if(!r.hidden){r.hidden=true;return}
   r.hidden=false;$("#rVolRow").hidden=IOS;$("#rVol").value=store.get("hg-radio-vol")||0.6;renderRadio();
-  STATIONS.forEach(st=>{if(!radio.state[st.id]||radio.state[st.id]==="off")checkStation(st)});
+  checkAll();
 }
 $("#radioBtn").onclick=openRadio;$("#radioHome").onclick=openRadio;$("#rClose").onclick=()=>$("#radio").hidden=true;
 $("#rVol").oninput=e=>{store.set("hg-radio-vol",e.target.value);if(radio.audio)radio.audio.volume=+e.target.value};
