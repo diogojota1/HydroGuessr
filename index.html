@@ -215,6 +215,9 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .dlgform input{flex:1;min-width:0;font-size:16px;padding:10px 12px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink)}
 .dlgform[hidden]{display:none}
 .dlgnote{font-size:12.5px}
+.dlginput{font-size:16px;padding:10px 12px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);width:100%}
+.acstep{display:flex;gap:10px;align-items:flex-start;margin-top:6px}.acstep > div{display:flex;flex-direction:column;gap:2px}.acstep b{font-size:14.5px;color:var(--ink)}
+.acnum{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--accent);color:var(--accent-ink)}
 .dlglinks{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--rule);padding-top:12px}
 .dlglinks button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13.5px}
 .dlglinks .danger{color:var(--bad)}
@@ -727,14 +730,14 @@ const STR={
  on_final:["Online result","Resultat på nett"],on_yours:["Your rounds","Dine runder"],on_rounds:["Rounds","Runder"],
  on_still:["Some players are still playing. The table updates by itself.","Noen spiller fortsatt. Tabellen oppdateres av seg selv."],on_note_hist:["Online {c}","På nett {c}"],
  players_h:["Players","Spillere"],players_note:["Tap a player to see their profile.","Trykk på en spiller for å se profilen."],
- ac_kicker:["Account","Konto"],ac_in_h:["Sign in","Logg inn"],
- ac_in_p:["Enter your email and we'll send you a sign-in link and a 6-digit code. No password needed.","Skriv inn e-postadressen din, så sender vi deg en innloggingslenke og en sekssifret kode. Du trenger ikke passord."],
- ac_email_ph:["you@example.com","deg@eksempel.no"],ac_send:["Send sign-in email","Send innloggings-e-post"],ac_resend:["Send again","Send på nytt"],
- ac_sent:["Check {e}. Tap the link in the email, or type the code here.","Sjekk {e}. Trykk på lenken i e-posten, eller skriv inn koden her."],
- ac_code_ph:["6-digit code","Sekssifret kode"],ac_verify:["Sign in","Logg inn"],
+ ac_kicker:["Account","Konto"],ac_email:["Email","E-post"],ac_email_bad:["Type a valid email address.","Skriv inn en gyldig e-postadresse."],ac_step1:["Get a code","Få en kode"],ac_step1_p:["We email you an 8-digit code. Already have one? Skip to step 2.","Vi sender deg en åttesifret kode på e-post. Har du allerede en? Gå til steg 2."],ac_step2:["Sign in with the code","Logg inn med koden"],ac_step2_p:["Type the code from the newest email.","Skriv inn koden fra den nyeste e-posten."],ac_in_h:["Sign in","Logg inn"],
+ ac_in_p:["Sign in or create an account with just your email. No password needed.","Logg inn eller opprett konto med bare e-postadressen din. Du trenger ikke passord."],
+ ac_email_ph:["you@example.com","deg@eksempel.no"],ac_send:["Email me a code","Send meg en kode"],ac_resend:["Send a new code","Send ny kode"],
+ ac_sent:["Email sent to {e}. Check your inbox (and spam), then type the code below or tap the link in the email.","E-post sendt til {e}. Sjekk innboksen (og søppelpost), og skriv inn koden under eller trykk på lenken i e-posten."],
+ ac_code_ph:["8-digit code","Åttesifret kode"],ac_verify:["Sign in","Logg inn"],
  ac_rate:["Too many emails right now. Wait a little and try again.","For mange e-poster akkurat nå. Vent litt og prøv igjen."],
  ac_fail:["Something went wrong. Check your connection and try again.","Noe gikk galt. Sjekk nettforbindelsen og prøv igjen."],
- ac_badcode:["That code didn't work. Check it, or send a new email.","Koden fungerte ikke. Sjekk den, eller send en ny e-post."],
+ ac_badcode:["That code didn't work. Check the email address and the code, or ask for a new code.","Koden fungerte ikke. Sjekk e-postadressen og koden, eller be om en ny kode."],
  ac_privacy:["We store your email (only for signing in), your display name and avatar, and your game progress. Other signed-in players can see your name, avatar, scores and badges, never your email. You can delete your account at any time under Profile.","Vi lagrer e-postadressen din (bare for innlogging), visningsnavn og avatar, og fremgangen din i spillet. Andre innloggede spillere kan se navn, avatar, poeng og merker, aldri e-postadressen. Du kan slette kontoen når som helst under Profil."],
  ac_welcome:["Welcome!","Velkommen!"],ac_setup_h:["Choose your player name","Velg spillernavn"],ac_edit_h:["Your profile","Profilen din"],
  ac_name:["Display name","Visningsnavn"],ac_name_ph:["e.g. Karin","f.eks. Karin"],ac_avatar:["Avatar","Avatar"],ac_save:["Save","Lagre"],
@@ -2884,23 +2887,29 @@ function closeDlg(){$("#dlgWrap").hidden=true}
 function signInDlg(){
   dlg(`<span class="kicker">${esc(t("ac_kicker"))}</span><h3>${esc(t("ac_in_h"))}</h3>
     <p class="dlgp">${esc(t("ac_in_p"))}</p>
-    <form id="acForm" class="dlgform"><input type="email" id="acEmail" required autocomplete="email" placeholder="${esc(t("ac_email_ph"))}" value="${esc(store.get("hg-ac-email")||"")}">
-    <button class="primary" type="submit">${esc(t("ac_send"))}</button></form>
-    <form id="acCodeForm" class="dlgform" hidden><input id="acCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="${esc(t("ac_code_ph"))}">
+    <label class="fl" for="acEmail">${esc(t("ac_email"))}</label>
+    <input type="email" id="acEmail" class="dlginput" required autocomplete="email" placeholder="${esc(t("ac_email_ph"))}" value="${esc(store.get("hg-ac-email")||"")}">
+    <div class="acstep"><span class="acnum">1</span><div><b>${esc(t("ac_step1"))}</b><span class="note">${esc(t("ac_step1_p"))}</span></div></div>
+    <button class="ghostbtn" id="acSend" type="button">${esc(t("ac_send"))}</button>
+    <p class="note" id="acSent" hidden></p>
+    <div class="acstep"><span class="acnum">2</span><div><b>${esc(t("ac_step2"))}</b><span class="note">${esc(t("ac_step2_p"))}</span></div></div>
+    <form id="acCodeForm" class="dlgform"><input id="acCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="${esc(t("ac_code_ph"))}">
     <button class="primary" type="submit">${esc(t("ac_verify"))}</button></form>
     <p class="err" id="acErr" hidden></p><p class="note dlgnote">${esc(t("ac_privacy"))}</p>`);
   const err=m=>{const e=$("#acErr");e.textContent=m;e.hidden=!m};
-  $("#acForm").onsubmit=async e=>{e.preventDefault();err("");const email=$("#acEmail").value.trim();store.set("hg-ac-email",email);
-    const b=e.target.querySelector("button");b.disabled=true;
-    const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true,data:{lang:LANG}}});
+  const email=()=>{const v=$("#acEmail").value.trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){err(t("ac_email_bad"));$("#acEmail").focus();return null}store.set("hg-ac-email",v);return v};
+  $("#acSend").onclick=async e=>{err("");const em=email();if(!em)return;
+    const b=e.currentTarget;b.disabled=true;
+    const {error}=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true,data:{lang:LANG}}});
     b.disabled=false;
-    if(error){err(/rate|seconds|many/i.test(error.message)?t("ac_rate"):t("ac_fail"));return}
-    $("#acCodeForm").hidden=false;$("#acForm").querySelector("button").textContent=t("ac_resend");
-    $(".dlgp").textContent=t("ac_sent",{e:email});setTimeout(()=>$("#acCode").focus(),30)};
-  $("#acCodeForm").onsubmit=async e=>{e.preventDefault();err("");
-    const email=$("#acEmail").value.trim(),token=$("#acCode").value.trim();
-    let {error}=await sb.auth.verifyOtp({email,token,type:"email"});
-    if(error)({error}=await sb.auth.verifyOtp({email,token,type:"signup"}));  /* first sign-in can use the sign-up code */
+    if(error){console.warn("sign-in email",error);err((/rate|seconds|many/i.test(error.message)?t("ac_rate"):t("ac_fail"))+(error.message?` (${error.message})`:""));return}
+    b.textContent=t("ac_resend");const x=$("#acSent");x.textContent=t("ac_sent",{e:em});x.hidden=false;setTimeout(()=>$("#acCode").focus(),30)};
+  $("#acCodeForm").onsubmit=async e=>{e.preventDefault();err("");const em=email();if(!em)return;
+    const token=$("#acCode").value.replace(/\s+/g,"");if(!/^\d{6,10}$/.test(token)){err(t("ac_badcode"));return}
+    const b=e.target.querySelector("button");b.disabled=true;
+    let {error}=await sb.auth.verifyOtp({email:em,token,type:"email"});
+    if(error)({error}=await sb.auth.verifyOtp({email:em,token,type:"signup"}));  /* a first sign-in can use the sign-up code */
+    b.disabled=false;
     if(error){err(t("ac_badcode"));return}closeDlg()};
 }
 function profileDlg(first){
