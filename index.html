@@ -215,6 +215,7 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .dlgform input{flex:1;min-width:0;font-size:16px;padding:10px 12px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink)}
 .dlgform[hidden]{display:none}
 .dlgnote{font-size:12.5px}
+.foot .ver{font-family:var(--mono,monospace);font-size:11.5px;opacity:.7}
 .dlginput{font-size:16px;padding:10px 12px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);width:100%}
 .acstep{display:flex;gap:10px;align-items:flex-start;margin-top:6px}.acstep > div{display:flex;flex-direction:column;gap:2px}.acstep b{font-size:14.5px;color:var(--ink)}
 .acnum{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--accent);color:var(--accent-ink)}
@@ -561,6 +562,7 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
       <p data-i18n-html="foot1"></p>
       <p data-i18n="foot2"></p>
       <p data-i18n="foot3"></p>
+      <p class="ver" id="appVer"></p>
     </div>
   </div>
 </section>
@@ -3293,6 +3295,9 @@ function renderOnlineBox(){
   $("#onPartyNote").hidden=MODE!=="party";
 }
 
+/* shown at the bottom of the front page, so it's easy to check which version a browser is running */
+const APP_VERSION="2026-10-16 v40";
+try{$("#appVer").textContent=(LANG==="no"?"Versjon ":"Version ")+APP_VERSION}catch(e){}
 /* ===================== LAYOUT ===================== */
 /* Spot buttons: centred, but on phones held sideways and small tablets the map in the bottom-right
    would cover them, so slide them left just far enough to end 16px before the map. */
