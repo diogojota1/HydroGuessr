@@ -184,6 +184,24 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .kicker{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel)}
 .disclaimer{border-left:3px solid var(--accent);padding:4px 0 4px 12px;font-size:13px;color:#C3CDD4;max-width:56ch}
 .disclaimer b{color:var(--ink);font-weight:600}
+
+/* leagues & online */
+.onlinebox{display:flex;flex-direction:column;gap:6px;border:1px solid var(--rule);border-radius:10px;padding:12px;background:var(--panel)}
+.onlinebox[hidden]{display:none}
+.onbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.onbtns .ghostbtn{flex:1;min-width:140px}
+.lgrow .lgicon{font-size:19px}
+.lgrank{font-family:var(--mono,monospace);font-size:16px;color:var(--ink)}.lgrank small{color:var(--muted);font-size:12px}
+.lgcode{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border:1px dashed var(--rule);border-radius:8px;padding:8px 10px}
+.lgcode b{font-size:22px;letter-spacing:.18em;color:var(--ink);font-family:var(--mono,monospace)}
+.lgcode .ghostbtn{margin-left:auto}
+.lgdates{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lgdates label{display:flex;flex-direction:column;gap:4px}
+.lgdates input{font-size:15px;padding:8px 10px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink)}
+.lgtable th{font-size:11.5px;text-align:left;color:var(--muted);font-weight:500;padding:4px 0}.lgtable tr.me td{color:var(--accent)}
+.lgtable td{vertical-align:middle}.pav.xs{width:22px;height:22px;font-size:13px;display:inline-grid;vertical-align:middle;margin-right:4px}
+.lgedit{border-top:1px solid var(--rule);padding-top:10px}
+.codein{text-transform:uppercase;letter-spacing:.2em;font-family:var(--mono,monospace)}
+.prow.static{cursor:default}.prow.static:hover{border-color:var(--rule)}
 /* accounts */
 .acct{display:flex;align-items:center;gap:12px;border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--panel)}
 .acct[hidden]{display:none}
@@ -200,8 +218,12 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .dlglinks{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--rule);padding-top:12px}
 .dlglinks button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13.5px}
 .dlglinks .danger{color:var(--bad)}
-.avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
-.avbtn{font-size:21px;height:42px;border-radius:8px;border:1px solid var(--rule);background:var(--panel2);cursor:pointer}
+.avgrid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:46px;align-content:start;gap:6px}
+.dlgform.col > *{flex:none}
+.avimg{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.avbtn .avimg{width:34px;height:34px;margin:auto}
+.aav,.pav{overflow:hidden}
+.avbtn{font-size:21px;height:46px;display:grid;place-items:center;padding:0;border-radius:8px;border:1px solid var(--rule);background:var(--panel2);cursor:pointer}
 .avbtn[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .plist{display:flex;flex-direction:column;gap:6px}
 .prow{display:flex;align-items:center;gap:10px;text-align:left;width:100%;border:1px solid var(--rule);border-radius:8px;padding:8px 10px;background:var(--panel);color:var(--ink);cursor:pointer}
@@ -337,6 +359,7 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .radio li.cur button{background:#3BB273;border-color:#3BB273;color:#fff}
 .radio .rrow{display:flex;align-items:center;gap:10px;font-size:13px}.radio input[type=range]{flex:1}
 .radio .rclose{align-self:flex-end}
+#badgeFilter{flex-direction:column;align-items:flex-start;gap:8px}.fgroup{display:flex;flex-wrap:wrap;gap:6px}
 .hsf{padding:0;margin:4px 0 10px}.hsf .chipbtn[aria-pressed="true"]{border-color:var(--accent);color:var(--ink)}
 .hsrow td{vertical-align:top}.hsrow .hsl{white-space:normal;font-family:var(--f-body)}.hsrow .note{display:block;font-size:12px;margin-top:2px}
 .radio ul{max-height:min(52vh,420px);overflow:auto}.radio li.rhid{border:0;padding:2px 10px;color:var(--muted)}
@@ -487,6 +510,12 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 
     <button class="primary" id="startBtn" data-i18n="start"></button>
     <p class="err" id="err" hidden></p>
+    <div class="onlinebox" id="onlineBox" hidden>
+      <span class="fl" data-i18n="on_h"></span>
+      <p class="note" data-i18n="on_p"></p>
+      <div class="onbtns"><button class="ghostbtn" id="onCreate" data-i18n="on_create"></button><button class="ghostbtn" id="onJoin" data-i18n="on_joinbtn"></button></div>
+      <p class="note" id="onPartyNote" data-i18n="on_noparty" hidden></p>
+    </div>
     <p class="note" id="count"></p>
 
     <div class="box">
@@ -508,6 +537,12 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
       <div id="histSum"></div>
       <div id="histBox"></div>
       <div class="links"><button id="histMore" hidden></button><button id="histClear" hidden data-i18n="h_clear"></button></div>
+    </div>
+    <div class="box" id="leaguesSec" hidden>
+      <h2 data-i18n="lg_h"></h2>
+      <p class="note" data-i18n="lg_p"></p>
+      <div id="leaguesBox"></div>
+      <div class="onbtns"><button class="ghostbtn" id="lgCreate" data-i18n="lg_newbtn"></button><button class="ghostbtn" id="lgJoin" data-i18n="lg_joinbtn"></button></div>
     </div>
     <div class="box" id="playersSec" hidden>
       <h2 data-i18n="players_h"></h2>
@@ -662,6 +697,35 @@ const STR={
  again:["Play again","Spill igjen"],again_daily:["Play again (practice)","Spill igjen (øving)"],home:["Back to start","Tilbake til start"],
  explore_after:["Explore all Hydro locations","Utforsk alle Hydro-stedene"],
  badge_earned:["Badge earned: {b}","Nytt merke: {b}"],
+ lg_h:["Daily challenge leagues","Ligaer for dagens utfordring"],lg_p:["Compete on the daily challenge over a set period. Everyone's daily score counts automatically.","Konkurrer i dagens utfordring over en valgt periode. Alles daglige poeng teller automatisk."],
+ lg_newbtn:["Create league","Opprett liga"],lg_joinbtn:["Join with code","Bli med med kode"],lg_kicker:["League","Liga"],
+ lg_new_h:["New league","Ny liga"],lg_new_p:["Choose a name and the dates. You'll get a code to share with the others.","Velg navn og datoer. Du får en kode du kan dele med de andre."],
+ lg_name:["League name","Navn på ligaen"],lg_name_ph:["e.g. November league","f.eks. Novemberligaen"],lg_from:["From","Fra"],lg_to:["To","Til"],
+ lg_create:["Create league","Opprett liga"],lg_bad_dates:["Check the name and dates: the end can't be before the start.","Sjekk navn og datoer: slutten kan ikke være før starten."],
+ lg_join_h:["Join a league","Bli med i en liga"],lg_join_p:["Type the 6-character code you got from the league's creator.","Skriv inn koden på 6 tegn du fikk av den som opprettet ligaen."],
+ lg_join:["Join","Bli med"],lg_nocode:["No league with that code. Check it and try again.","Ingen liga med den koden. Sjekk den og prøv igjen."],lg_full:["That league is full (100 players).","Ligaen er full (100 spillere)."],
+ lg_none:["You're not in any leagues yet. Create one or join with a code.","Du er ikke med i noen liga ennå. Opprett en eller bli med med en kode."],
+ lg_st_live:["running","pågår"],lg_st_soon:["starts soon","starter snart"],lg_st_done:["finished","ferdig"],
+ lg_days:["{n} days","{n} dager"],lg_left:["{n} days left","{n} dager igjen"],lg_code:["Join code","Kode"],lg_invite:["Share invite","Del invitasjon"],
+ lg_share:["Join my HydroGuessr league \"{n}\" with the code {c} — {u}","Bli med i HydroGuessr-ligaen min «{n}» med koden {c} – {u}"],
+ lg_winner:["{n} won the league!","{n} vant ligaen!"],lg_today:["Today","I dag"],lg_daysp:["Days","Dager"],
+ lg_rule:["Points are the sum of each player's daily challenge scores between the league's dates. Only the first try each day counts.","Poengene er summen av hver spillers poeng i dagens utfordring mellom ligaens datoer. Bare første forsøk hver dag teller."],
+ lg_edit:["Edit league","Endre ligaen"],lg_delete:["Delete league","Slett ligaen"],lg_delete_sure:["Tap again to delete the league for everyone","Trykk igjen for å slette ligaen for alle"],
+ lg_leave:["Leave league","Forlat ligaen"],lg_leave_sure:["Tap again to leave","Trykk igjen for å forlate"],
+ on_h:["Play online","Spill på nett"],on_p:["Play the selected mode together with others, each on your own device. Everyone needs to be signed in.","Spill valgt modus sammen med andre, hver på sin enhet. Alle må være logget inn."],
+ on_create:["Create online game","Opprett nettspill"],on_joinbtn:["Join with code","Bli med med kode"],on_noparty:["Party mode is played on one screen, so it isn't available online.","Gruppespill spilles på én skjerm og finnes derfor ikke på nett."],
+ on_kicker:["Online game","Nettspill"],on_join_h:["Join an online game","Bli med i et nettspill"],on_join_p:["Type the 5-character code from the person hosting the game.","Skriv inn koden på 5 tegn fra den som har opprettet spillet."],
+ on_join:["Join","Bli med"],on_lobby_host:["Waiting for players","Venter på spillere"],on_lobby:["You're in!","Du er med!"],on_code:["Game code","Spillkode"],
+ on_waiting_host:["Connecting to the game…","Kobler til spillet …"],on_host:["host","vert"],on_need2:["Waiting for at least one more player","Venter på minst én spiller til"],
+ on_full:["Too many players (max 8)","For mange spillere (maks 8)"],on_start:["Start game with {n} players","Start spillet med {n} spillere"],
+ on_wait_start:["The host starts the game when everyone has joined.","Verten starter spillet når alle er med."],
+ on_note:["Everyone gets the same places. Each round's result opens when everyone has guessed.","Alle får de samme stedene. Resultatet for hver runde vises når alle har gjettet."],
+ on_leave:["Leave game","Forlat spillet"],on_nogame:["No game found with that code. Check it, or ask the host if the game is still open.","Fant ikke noe spill med den koden. Sjekk den, eller spør verten om spillet fortsatt er åpent."],
+ on_started:["This game has already started.","Dette spillet har allerede startet."],on_conn:["Couldn't connect. Check your internet connection.","Fikk ikke kontakt. Sjekk nettforbindelsen."],
+ on_share:["Join my HydroGuessr game with the code {c} — {u}","Bli med i HydroGuessr-spillet mitt med koden {c} – {u}"],
+ on_waiting:["Waiting for the others to guess…","Venter på at de andre skal gjette …"],on_left:["left","gikk"],on_others:["Other players","Andre spillere"],
+ on_final:["Online result","Resultat på nett"],on_yours:["Your rounds","Dine runder"],on_rounds:["Rounds","Runder"],
+ on_still:["Some players are still playing. The table updates by itself.","Noen spiller fortsatt. Tabellen oppdateres av seg selv."],on_note_hist:["Online {c}","På nett {c}"],
  players_h:["Players","Spillere"],players_note:["Tap a player to see their profile.","Trykk på en spiller for å se profilen."],
  ac_kicker:["Account","Konto"],ac_in_h:["Sign in","Logg inn"],
  ac_in_p:["Enter your email and we'll send you a sign-in link and a 6-digit code. No password needed.","Skriv inn e-postadressen din, så sender vi deg en innloggingslenke og en sekssifret kode. Du trenger ikke passord."],
@@ -684,7 +748,7 @@ const STR={
  ac_you:["you","deg"],ac_row:["{g} games · {v}/{n} locations","{g} spill · {v}/{n} steder"],ac_noplayers:["No players yet.","Ingen spillere ennå."],
 
  tier_al:["Aluminium","Aluminium"],tier_au:["Gold","Gull"],tier_ag:["Silver","Sølv"],tier_cu:["Bronze","Bronse"],
- bf_all:["All","Alle"],bf_on:["Earned","Oppnådd"],bf_off:["Not yet","Ikke ennå"],
+ bf_all:["All","Alle"],bf_on:["Earned","Oppnådd"],bf_off:["Not yet","Ikke ennå"],bf_alltiers:["All tiers","Alle nivåer"],bf_status:["Show","Vis"],bf_tier:["Tier","Nivå"],
  badge_none:["No badges here yet — keep playing!","Ingen merker her ennå – fortsett å spille!"],
  tier_al_note:["Rarer than gold — just as aluminium was in the 1850s.","Sjeldnere enn gull – akkurat som aluminium var på 1850-tallet."],
  /* explore */
@@ -1781,18 +1845,21 @@ function checkRadioBadge(site){
 /* daily challenge totals on the last n days, today included */
 function dailyRun(n,min){for(let k=0;k<n;k++){const r=store.json("hg-daily-"+today(Date.now()-k*864e5),null);if(!r||!r.done||!(r.total>=min))return false}return true}
 
-let badgeF=store.get("hg-badgef")||"all";
+let badgeS=store.get("hg-badges-s")||"all",badgeT=store.get("hg-badges-t")||"all";
+/* two independent filters: status (all / earned / not yet) and tier (all / aluminium / gold / silver / bronze) */
 function renderBadges(){
-  const b=earned(),opts=["all","on","off","al","au","ag","cu"];
-  if(!opts.includes(badgeF))badgeF="all";
+  const b=earned(),SO=["all","on","off"],TO=["all","al","au","ag","cu"];
+  if(!SO.includes(badgeS))badgeS="all";if(!TO.includes(badgeT))badgeT="all";
   $("#badgeCount").textContent=`${BADGES.filter(d=>b[d.id]).length}/${BADGES.length}`;
-  $("#badgeFilter").innerHTML=opts.map(o=>`<button class="chipbtn${o.length===2&&o!=="on"?" tchip t-"+o:""}" data-f="${o}" aria-pressed="${badgeF===o}">${esc(o.length===2&&o!=="on"?t("tier_"+o):t("bf_"+o))}</button>`).join("");
-  $("#badgeFilter").querySelectorAll("button").forEach(x=>x.onclick=()=>{badgeF=x.dataset.f;store.set("hg-badgef",badgeF);renderBadges()});
+  $("#badgeFilter").innerHTML=`<div class="fgroup" role="group" aria-label="${esc(t("bf_status"))}">${SO.map(o=>`<button class="chipbtn" data-s="${o}" aria-pressed="${badgeS===o}">${esc(t("bf_"+o))}</button>`).join("")}</div>
+    <div class="fgroup" role="group" aria-label="${esc(t("bf_tier"))}">${TO.map(o=>`<button class="chipbtn${o!=="all"?" tchip t-"+o:""}" data-t="${o}" aria-pressed="${badgeT===o}">${esc(o==="all"?t("bf_alltiers"):t("tier_"+o))}</button>`).join("")}</div>`;
+  $("#badgeFilter").querySelectorAll("button").forEach(x=>x.onclick=()=>{
+    if(x.dataset.s){badgeS=x.dataset.s;store.set("hg-badges-s",badgeS)}else{badgeT=x.dataset.t;store.set("hg-badges-t",badgeT)}renderBadges()});
   const card=d=>{const [n,ds]=badgeTxt(d.id),on=!!b[d.id];
     return `<div class="badge ${on?"on":"off"} t-${d.tier}"><i class="bico" aria-hidden="true"><i class="bface">${BADGE_ICON[d.id]||"★"}</i></i><div><b>${esc(n)}</b><span class="btier">${esc(t("tier_"+d.tier))}</span><span>${esc(ds)}</span></div></div>`};
   const html=TIERS.map(([tier,ids])=>{
-    if(["al","au","ag","cu"].includes(badgeF)&&badgeF!==tier)return "";
-    const list=BADGES.filter(d=>d.tier===tier&&(badgeF==="on"?b[d.id]:badgeF==="off"?!b[d.id]:true));
+    if(badgeT!=="all"&&badgeT!==tier)return "";
+    const list=BADGES.filter(d=>d.tier===tier&&(badgeS==="on"?b[d.id]:badgeS==="off"?!b[d.id]:true));
     if(!list.length)return "";
     const got=BADGES.filter(d=>d.tier===tier&&b[d.id]).length,tot=ids.length;
     return `<h3 class="tierh t-${tier}"><i class="tdot"></i>${esc(t("tier_"+tier))} <span>${got}/${tot}</span></h3>${tier==="al"?`<p class="note">${esc(t("tier_al_note"))}</p>`:""}<div class="badges">${list.map(card).join("")}</div>`}).join("");
@@ -1816,7 +1883,8 @@ function renderHome(){
   renderHistory();
   const b=earned();
   renderBadges();
-  if(me)renderPlayers();
+  if(me){renderPlayers();renderLeagues()}
+  if(typeof renderOnlineBox==="function")renderOnlineBox();
   const dr=store.json("hg-daily-"+today(),null),streak=store.json("hg-streak",{n:0,last:""});
   $("#dailyDone").textContent=dr?t("daily_played",{pts:fmt(dr.total)})+(streak.n>1?" · "+t("streak_n",{n:streak.n}):""):streak.n>1&&streak.last?t("streak_keep",{n:streak.n}):"";
 }
@@ -1899,6 +1967,7 @@ function setMode(m){MODE=m;store.set("hg-mode",m);setPoolOptions(m);
   document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===m)));
   document.querySelectorAll("#opts [data-for]").forEach(f=>f.hidden=!f.dataset.for.split(" ").includes(m));
   $("#opts").hidden=m==="daily";updateCount();
+  if(typeof renderOnlineBox==="function"&&typeof sb!=="undefined")renderOnlineBox();
 }
 const dailyRec=()=>store.json("hg-daily-"+today(),null);
 function updateCount(){
@@ -1992,7 +2061,7 @@ const TUNNEL_RE=/tunnel|túnel|tunel|tünel|galleria|traforo|alagút|tunnelen|tu
 let darkCheck=true;
 async function looksDark(pano){
   /* skipped in the daily challenge, so every player gets the same spots whatever their key allows */
-  if(!darkCheck||!apiKey||(G&&G.mode==="daily"))return false;
+  if(!darkCheck||!apiKey||(G&&(G.mode==="daily"||G.online)))return false;
   try{
     const r=await fetch(`https://maps.googleapis.com/maps/api/streetview?size=96x64&pano=${encodeURIComponent(pano)}&fov=120&pitch=12&heading=0&return_error_code=true&key=${encodeURIComponent(apiKey)}`);
     if(!r.ok){if(r.status===403||r.status===401)darkCheck=false;return false}
@@ -2105,30 +2174,36 @@ function tourPitch(spot,a){
 }
 
 /* ===================== GAME FLOW ===================== */
-async function startGame(){
+async function startGame(opt){
+  opt=opt&&opt.online?opt:null;           /* an online game passes the host's settings; buttons pass a click event */
+  const C=opt?opt.cfg:null;
   $("#err").hidden=true;
-  ["diff","spread","rounds","players"].forEach(id=>store.set("hg-"+id,$("#"+id).value));store.set(MODE==="extrusion"?"hg-pool-ext":"hg-pool",$("#pool").value);
+  if(!opt){["diff","spread","rounds","players"].forEach(id=>store.set("hg-"+id,$("#"+id).value));store.set(MODE==="extrusion"?"hg-pool-ext":"hg-pool",$("#pool").value)}
   $("#start").hidden=true;$("#loading").hidden=false;$("#loading").textContent=t("loading_maps");
   if(!await ensureMaps())return;
-  const m=MODE,daily=m==="daily";
-  if(daily&&dailyRec()){reviewDaily();return}
-  if(daily)store.put("hg-daily-"+today(),{total:0,rounds:[],done:false});
-  const rand=daily?mulberry32(hashStr("hydroguessr-"+today())):Math.random;
+  const m=opt?C.mode:MODE,daily=m==="daily";
+  const practice=!!(opt&&daily&&dailyRec());   /* already played today's challenge: an online daily is just practice */
+  if(!opt&&daily&&dailyRec()){reviewDaily();return}
+  if(daily&&!practice)store.put("hg-daily-"+today(),{total:0,rounds:[],done:false});
+  const rand=daily?mulberry32(hashStr("hydroguessr-"+today())):opt?mulberry32(hashStr("online-"+opt.seed)):Math.random;
   let names=[LANG==="no"?"Deg":"You"];
   if(m==="party"){names=$("#players").value.split(",").map(s=>s.trim()).filter(Boolean).slice(0,6);
     if(names.length<2){showErr(t("e_party"));return}}
   let queue=[],rounds;
-  const pool=$("#pool").value,poolTxt=$("#pool").selectedOptions[0].text;
-  if(m==="extrusion"){queue=shuffleR(SITES.filter(s=>s.area==="E"&&inRegion(s,pool)),rand);rounds=Math.min(+$("#rounds").value,queue.length)}
-  else if(m==="tourist"){queue=shuffleR(TOURS.filter(x=>inRegion(x,pool)&&tourView(x.town)),rand);rounds=Math.min(+$("#rounds").value,queue.length)}
+  const pool=opt?C.pool:$("#pool").value,poolTxt=opt?C.poolTxt:$("#pool").selectedOptions[0].text;
+  const diffV=opt?C.diff:$("#diff").value,roundsV=opt?+C.rounds:+$("#rounds").value;
+  if(m==="extrusion"){queue=shuffleR(SITES.filter(s=>s.area==="E"&&inRegion(s,pool)),rand);rounds=Math.min(roundsV,queue.length)}
+  else if(m==="tourist"){queue=shuffleR(TOURS.filter(x=>inRegion(x,pool)&&tourView(x.town)),rand);rounds=Math.min(roundsV,queue.length)}
   else if(daily){queue=shuffleR(SITES.filter(s=>s.area!=="O"),rand);rounds=5}
-  else{queue=shuffleR(SITES.filter(s=>inRegion(s,pool)&&inDiff(s,$("#diff").value)),rand);rounds=Math.min(+$("#rounds").value,queue.length)}
+  else{queue=shuffleR(SITES.filter(s=>inRegion(s,pool)&&inDiff(s,diffV)),rand);rounds=Math.min(roundsV,queue.length)}
   if(!rounds){showErr(t("e_none"));return}
-  const diffTxt=$("#diff").selectedOptions[0].text.split(":")[0];
-  G={mode:m,rand,bonus:m!=="extrusion",blitzSec:m==="blitz"?30:m==="blitz15"?15:0,spread:daily?5:+$("#spread").value,rounds,turning:daily?true:$("#move").checked,queue,round:0,svOk:false,
+  const diffTxt=opt?C.diffTxt:$("#diff").selectedOptions[0].text.split(":")[0];
+  if(opt)names=[myProfile?myProfile.name:names[0]];
+  G={mode:m,rand,bonus:m!=="extrusion",blitzSec:m==="blitz"?30:m==="blitz15"?15:0,spread:daily?5:opt?+C.spread:+$("#spread").value,rounds,turning:daily?true:opt?!!C.turning:$("#move").checked,queue,round:0,svOk:false,
+     online:opt?opt.online:null,seed:opt?opt.seed:null,practice,
      players:names.map(n=>({name:n,results:[]})),pIdx:0,newBadges:[],phase:"load",
      setup:(m==="classic"||m==="blitz"||m==="blitz15"||m==="party")?`${poolTxt} · ${diffTxt}`:(m==="extrusion"||m==="tourist")?poolTxt:""};
-  G.cfg={pool,diff:$("#diff").value,spread:$("#spread").value,rounds};
+  G.cfg={pool,diff:diffV,spread:opt?C.spread:$("#spread").value,rounds,online:!!opt};
   G.areaLabel="";
   nextRound();
 }
@@ -2173,7 +2248,7 @@ function beginTurn(){
   const go=$("#go");go.disabled=true;go.textContent=t("place_guess");
   $("#dock").hidden=false;$("#dock").classList.remove("mapopen");$("#mapFab").textContent=t("open_map");
   showView();
-  $("#turns").hidden=G.mode==="daily";
+  $("#turns").hidden=G.mode==="daily"||!!G.online;
   if(G.blitzSec)startTimer();else $("#timerBox").hidden=true;
 }
 function showView(){
@@ -2239,7 +2314,7 @@ function submit(timeout){
 function rightAnswer(){return G.cur.site.tour?G.cur.site.near.town:G.cur.site.area}
 function askBonus(timedOut){
   const s=G.cur.site,right=rightAnswer();let opts,q,lab;
-  const rr=G.mode==="daily"?mulberry32(hashStr("bonus-"+today()+"-"+G.round)):Math.random;
+  const rr=G.mode==="daily"?mulberry32(hashStr("bonus-"+today()+"-"+G.round)):G.online?mulberry32(hashStr("bonus-"+G.seed+"-"+G.round)):Math.random;
   if(s.tour){
     const others=SITES.filter(x=>x.town!==right).sort((p,q)=>(p.country===s.country?0:1)-(q.country===s.country?0:1)).map(x=>({x,d:km({lat:s.lat,lng:s.lon},{lat:x.lat,lng:x.lon})})).sort((a,b)=>a.d-b.d);
     const pick=shuffleR(others.slice(0,12),rr).slice(0,3).map(o=>o.x.town);
@@ -2264,7 +2339,8 @@ function answer(k,btn){
   const r={site:G.cur.site,spot:G.cur.spot,guess:pd.guess,d:pd.d,base:pd.base,bonusOk:ok,pts:pd.base+(ok?500:0),elapsed:pd.elapsed,hint:pd.hint,
     fromSite:km(G.cur.spot,{lat:G.cur.site.lat,lng:G.cur.site.lon})};
   p.results.push(r);G.cur.guesses[G.pIdx]=r;
-  if(G.mode==="daily"&&G.players.length===1){const key="hg-daily-"+today(),rec=store.json(key,{total:0,rounds:[],done:false});
+  if(G.online)onlineSendGuess(r);
+  if(G.mode==="daily"&&G.players.length===1&&!G.practice){const key="hg-daily-"+today(),rec=store.json(key,{total:0,rounds:[],done:false});
     rec.rounds.push({town:r.site.town,country:r.site.country,area:r.site.area,lat:r.site.lat,lon:r.site.lon,s:[r.spot.lat,r.spot.lng],
       g:r.guess?[r.guess.lat,r.guess.lng]:null,d:r.d,pts:r.pts,b:r.bonusOk});
     rec.total=rec.rounds.reduce((a,x)=>a+x.pts,0);store.put(key,rec)}
@@ -2272,7 +2348,7 @@ function answer(k,btn){
     $("#modal").hidden=true;$("#scrim").hidden=true;
     if(r.d!=null&&r.d<1)award("bullseye");if(r.d!=null&&r.d<10)award("sharp");if(r.pts>=5250)award("near");if(r.d!=null&&r.d>15000)award("hemisphere");
     if(G.blitzSec&&r.elapsed!=null&&r.elapsed<8&&r.pts>=3000)award("quick");
-    if(G.pIdx<G.players.length-1){G.pIdx++;handoff()}else reveal();
+    if(G.pIdx<G.players.length-1){G.pIdx++;handoff()}else if(G.online)onlineMaybeReveal();else reveal();
   },!G.bonus?0:ok?700:1300);
 }
 
@@ -2297,7 +2373,7 @@ function reveal(){
   if(G.players.length===1){checkCollection();if(!s.tour)checkRadioBadge(s)}
   document.body.classList.add("resultmode");$("#dock").hidden=false;$("#dock").classList.remove("mapopen");
   ["#hintBtn","#hintTxt","#turns","#timerBox","#playerChip"].forEach(x=>$(x).hidden=true);
-  gmap.setOptions({draggableCursor:null});fit(drawRound(s,c.spot,c.guesses));
+  gmap.setOptions({draggableCursor:null});fit(drawRound(s,c.spot,G.online&&ON?onlineGuesses(G.round,c.guesses[0]):c.guesses));
   const solo=G.players.length===1,r=c.guesses[0];
   $("#scoreVal").textContent=solo?fmt(G.players[0].results.reduce((a,x)=>a+x.pts,0)):"–";
   const RMAX=G.bonus?5500:5000;
@@ -2305,11 +2381,12 @@ function reveal(){
     <div class="big">${fmt(r.pts)}<small>/ ${fmt(RMAX)}</small></div>
     <div class="meter"><i style="width:${(r.pts/RMAX*100).toFixed(1)}%"></i></div>
     <p class="mono">${r.d==null?t("no_guess_placed"):t("guess_away",{d:fmtKm(r.d)})} · ${fmt(r.base)} ${t("pts")}${r.hint?t("hint_used",{p:r.hint}):""}${r.elapsed!=null?` · ${r.elapsed.toFixed(1)} s`:""}<br>
-    ${G.bonus?`${s.tour?t("bonus_near"):t("bonus_area")}: ${r.bonusOk?t("right"):t("wrong")}`:""}</p>`
+    ${G.bonus?`${s.tour?t("bonus_near"):t("bonus_area")}: ${r.bonusOk?t("right"):t("wrong")}`:""}</p>
+    ${G.online&&ON?`<div id="onTable">${onlineTableHtml(G.round)}</div>`:""}`
    :`<table><thead><tr><th>${t("player")}</th><th class="num">${t("off_by")}</th><th class="num">${G.bonus?t("bonus"):""}</th><th class="num">${t("pts")}</th></tr></thead><tbody>
     ${G.players.map((p,i)=>{const x=c.guesses[i];return`<tr><td style="color:${COLORS[i%COLORS.length]}">${esc(p.name)}</td><td class="num">${fmtKm(x.d)}</td><td class="num">${G.bonus?(x.bonusOk?"✓":"✗"):""}</td><td class="num">${fmt(x.pts)}</td></tr>`}).join("")}
     </tbody></table>`;
-  const legend=`<div class="legend">${solo?`<span><i style="background:${COLORS[0]}"></i>${t("lg_guess")}</span>`:""}<span><i style="background:var(--spot)"></i>${t("lg_spot")}</span><span><i class="sq" style="background:var(--site)"></i>${s.tour?t("lg_attr"):t("lg_site")}</span></div>`;
+  const legend=`<div class="legend">${solo?`<span><i style="background:${COLORS[0]}"></i>${t("lg_guess")}</span>`:""}${G.online?`<span><i style="background:${COLORS[1]}"></i>${t("on_others")}</span>`:""}<span><i style="background:var(--spot)"></i>${t("lg_spot")}</span><span><i class="sq" style="background:var(--site)"></i>${s.tour?t("lg_attr"):t("lg_site")}</span></div>`;
   const fact=factOf(s);
   const body=s.tour?`
     <div class="tags"><span class="tag a">${areaN("T")}</span><span class="tag">${esc(countryN(s.country))}</span></div>
@@ -2342,7 +2419,7 @@ function finish(){
   ["#turns","#hintBtn","#hintTxt","#timerBox","#playerChip","#stageChip"].forEach(x=>$(x).hidden=true);
   document.body.classList.add("resultmode");$("#dock").hidden=false;
   const p0=G.players[0],res=p0.results,pts=[];
-  res.forEach((r,i)=>pts.push(...drawRound(r.site,r.spot,G.players.map(p=>p.results[i]))));if(pts.length)fit(pts);
+  res.forEach((r,i)=>pts.push(...drawRound(r.site,r.spot,G.online&&ON?onlineGuesses(i+1,r):G.players.map(p=>p.results[i]))));if(pts.length)fit(pts);
   const tot=p=>p.results.reduce((a,x)=>a+x.pts,0),max=(G.bonus?5500:5000)*res.length,solo=G.players.length===1;
   if(solo){
     const tt=tot(p0);
@@ -2373,7 +2450,7 @@ function finish(){
   if(solo){
     const practice=G.mode==="daily"&&G.dailyRecorded;
     saveGame({t:Date.now(),mode:G.mode,total:tot(p0),max,sq:res.map(r=>square(r.pts)).join(""),cfg:G.cfg,
-      note:G.mode==="daily"?(practice?t("practice"):today()):G.setup});
+      note:(G.online?t("on_note_hist",{c:G.online.code})+" · ":"")+(G.mode==="daily"?(practice?t("practice"):today()):G.setup)});
   }else saveGame({t:Date.now(),mode:"party",total:G.ranked[0].t,max,sq:"",note:t("won_by",{name:G.ranked[0].p.name,n:G.players.length})});
   const shareTxt=solo?`HydroGuessr ${label}${G.mode==="daily"?" "+today():""} · ${fmt(tot(p0))}/${fmt(max)}\n${res.map(r=>square(r.pts)).join("")}`
     :`HydroGuessr ${label} · ${G.ranked.map((x,k)=>`${k+1}. ${x.p.name} ${fmt(x.t)}`).join(" · ")}`;
@@ -2388,12 +2465,12 @@ function finish(){
     </tbody></table>`;
   $("#roundVal").textContent="✓";$("#scoreVal").textContent=solo?fmt(tot(p0)):"–";
   $("#result").innerHTML=`
-    <span class="lbl">${t("final",{m:esc(label)})}</span>${body}
+    <span class="lbl">${t("final",{m:esc(label)})}</span>${G.online&&ON?`<span class="lbl">${esc(t("on_final"))}</span><div id="onFinal">${onlineFinalHtml()}</div><span class="lbl">${esc(t("on_yours"))}</span>`:""}${body}
     ${G.newBadges.length?`<p class="fact">${t(G.newBadges.length>1?"new_badges":"new_badge",{b:G.newBadges.map(esc).join(", ")})}</p>`:""}
     <span class="lbl">${t("share_lbl")}</span>
     <div class="share" id="shareTxt">${esc(shareTxt)}</div>
     <div class="links"><button id="copyShare">${t("copy")}</button><button id="exploreAfter">${t("explore_after")}</button></div>
-    ${G.mode==="daily"?"":`<button class="primary" id="again">${t("again")}</button>`}
+    ${G.mode==="daily"||G.online?"":`<button class="primary" id="again">${t("again")}</button>`}
     <button class="ghostbtn" id="home">${t("home")}</button>`;
   $("#result").hidden=false;
   $("#copyShare").onclick=e=>copyText(shareTxt,e.currentTarget);
@@ -2433,7 +2510,7 @@ async function reviewDaily(){
   $("#copyShare").onclick=e=>copyText(shareTxt,e.currentTarget);
   $("#home").onclick=goHome;
 }
-function goHome(){stopTimer();clearOverlays();G=null;document.body.classList.remove("resultmode");
+function goHome(){stopTimer();clearOverlays();if(G&&G.online)onlineLeave();G=null;document.body.classList.remove("resultmode");
   ["#result","#dock","#stats","#turns","#modal","#scrim","#handoff","#loading","#explore"].forEach(s=>$(s).hidden=true);$("#start").hidden=false;renderHome()}
 
 /* ===================== EXPLORE MAP ===================== */
@@ -2722,7 +2799,11 @@ $("#gateForm").addEventListener("submit",e=>{
    Without supabase.js (or offline) the game simply runs as before, saving in this browser only. */
 var SB_URL="https://jpmfocalbgkigkrkddkw.supabase.co",SB_KEY="sb_publishable_-XYwjr2fhuzZqIbwHKL3Iw_PPaz39mn";
 var sb=null,me=null,myProfile=null,cloudStats=null,syncState="",syncTimer=null,syncBusy=false,applying=false,playersCache=null;
-var AVATARS=["🧭","🦊","🐻","🦉","🐺","🦅","🐋","🦌","🐧","🐙","🦁","🐢","🚀","⚡","🔥","💎","🏔️","🌊","🎯","🧲"];
+/* 12 avatars, all with an aluminium link: can, aircraft, bike, car, bauxite mining, smelter, recycling, hydropower,
+   electricity, battery, satellite, plus one photo avatar (stored as "img:p1") */
+var AVATARS=["🥫","✈️","🚲","🚗","⛏️","🏭","♻️","💧","⚡","🔋","🛰️","img:p1"];
+var AV_IMG={p1:"data:image/png;base64,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"};
+function avHtml(a){if(typeof a==="string"&&a.startsWith("img:")&&AV_IMG[a.slice(4)])return `<img class="avimg" src="${AV_IMG[a.slice(4)]}" alt="">`;return esc(a||"👤")}
 var DEVICE=store.get("hg-device")||(()=>{const d=Math.random().toString(36).slice(2,10);store.set("hg-device",d);return d})();
 
 /* ---------- local <-> cloud data ---------- */
@@ -2787,7 +2868,7 @@ async function syncNow(){
     const m=mergeData(data||{},localData());applyData(m);
     const row={user_id:me.id,...m,summary:summaryOf(m),updated_at:new Date().toISOString()};
     const up=await sb.from("player_data").upsert(row,{onConflict:"user_id"});if(up.error)throw up.error;
-    setSync("saved");playersCache=null;
+    setSync("saved");playersCache=null;leaguesCache=null;pushDailyResults();
     if(!$("#start").hidden)renderHome();
   }catch(e){console.warn("sync",e);setSync("offline")}
   finally{syncBusy=false}
@@ -2811,7 +2892,7 @@ function signInDlg(){
   const err=m=>{const e=$("#acErr");e.textContent=m;e.hidden=!m};
   $("#acForm").onsubmit=async e=>{e.preventDefault();err("");const email=$("#acEmail").value.trim();store.set("hg-ac-email",email);
     const b=e.target.querySelector("button");b.disabled=true;
-    const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
+    const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true,data:{lang:LANG}}});
     b.disabled=false;
     if(error){err(/rate|seconds|many/i.test(error.message)?t("ac_rate"):t("ac_fail"));return}
     $("#acCodeForm").hidden=false;$("#acForm").querySelector("button").textContent=t("ac_resend");
@@ -2827,14 +2908,14 @@ function profileDlg(first){
   dlg(`<span class="kicker">${esc(t(first?"ac_welcome":"ac_kicker"))}</span><h3>${esc(t(first?"ac_setup_h":"ac_edit_h"))}</h3>
     <form id="pfForm" class="dlgform col"><label class="fl" for="pfName">${esc(t("ac_name"))}</label>
     <input id="pfName" maxlength="30" required value="${esc(p.name)}" placeholder="${esc(t("ac_name_ph"))}">
-    <span class="fl">${esc(t("ac_avatar"))}</span><div class="avgrid">${AVATARS.map(a=>`<button type="button" class="avbtn" aria-pressed="${a===av}" data-a="${a}">${a}</button>`).join("")}</div>
+    <span class="fl">${esc(t("ac_avatar"))}</span><div class="avgrid">${AVATARS.map(a=>`<button type="button" class="avbtn" aria-pressed="${a===av}" data-a="${a}">${avHtml(a)}</button>`).join("")}</div>
     <button class="primary" type="submit">${esc(t("ac_save"))}</button></form><p class="err" id="pfErr" hidden></p>
     ${first?"":`<div class="dlglinks"><button id="pfOut">${esc(t("ac_signout"))}</button><button id="pfDel" class="danger">${esc(t("ac_delete"))}</button></div>`}`);
   $("#dlg").querySelectorAll(".avbtn").forEach(b=>b.onclick=()=>{av=b.dataset.a;$("#dlg").querySelectorAll(".avbtn").forEach(x=>x.setAttribute("aria-pressed",x===b))});
   $("#pfForm").onsubmit=async e=>{e.preventDefault();const name=$("#pfName").value.trim().slice(0,30);if(!name)return;
     const {data,error}=await sb.from("profiles").upsert({id:me.id,name,avatar:av,updated_at:new Date().toISOString()},{onConflict:"id"}).select().single();
     if(error){const x=$("#pfErr");x.textContent=t("ac_fail");x.hidden=false;return}
-    myProfile=data;playersCache=null;closeDlg();renderAccount();renderPlayers();if(first)syncNow()};
+    myProfile=data;playersCache=null;closeDlg();renderAccount();renderPlayers();renderLeagues();renderOnlineBox();if(first)syncNow()};
   if(!first){
     $("#pfOut").onclick=async()=>{await sb.auth.signOut();closeDlg()};
     $("#pfDel").onclick=async e=>{const b=e.target;if(!b.dataset.armed){b.dataset.armed=1;b.textContent=t("ac_delete_sure");return}
@@ -2851,7 +2932,7 @@ async function playerDlg(id){
     return `<h4 class="tierh t-${tier}"><i class="tdot"></i>${esc(t("tier_"+tier))} <span>${got.length}/${ids.length}</span></h4>
       <div class="pbadges">${got.map(i=>`<span class="badge on t-${tier} mini" title="${esc(badgeTxt(i)[0])}"><i class="bico" aria-hidden="true"><i class="bface">${BADGE_ICON[i]||"★"}</i></i><b>${esc(badgeTxt(i)[0])}</b></span>`).join("")}</div>`}).join("");
   const recent=(d.history||[]).filter(g=>g.mode!=="party").slice(0,5).map(g=>`<tr><td>${esc(new Date(g.t).toLocaleDateString(LOCALE,{day:"numeric",month:"short"}))}</td><td>${esc(modeLabel(g.mode))}</td><td class="num">${fmt(g.total)}</td></tr>`).join("");
-  dlg(`<div class="phead"><span class="pav">${esc(p.avatar)}</span><div><h3>${esc(p.name)}</h3><span class="note">${esc(t("ac_since",{d:new Date(p.created_at).toLocaleDateString(LOCALE,{month:"long",year:"numeric"})}))}</span></div></div>
+  dlg(`<div class="phead"><span class="pav">${avHtml(p.avatar)}</span><div><h3>${esc(p.name)}</h3><span class="note">${esc(t("ac_since",{d:new Date(p.created_at).toLocaleDateString(LOCALE,{month:"long",year:"numeric"})}))}</span></div></div>
     <div class="pstats">
       <div><b>${fmt(s.games)}</b><span>${esc(t("ac_games"))}</span></div>
       <div><b>${fmt(s.best)}</b><span>${esc(t("ac_best"))}</span></div>
@@ -2872,7 +2953,7 @@ function renderAccount(){
   if(!me){box.innerHTML=`<span class="aav">👤</span><div class="acctxt"><b>${esc(t("ac_out_h"))}</b><span class="note">${esc(t("ac_out_p"))}</span></div><button class="ghostbtn" id="acctIn">${esc(t("ac_in"))}</button>`;
     $("#acctIn").onclick=signInDlg;return}
   const p=myProfile||{name:me.email||"",avatar:"👤"};
-  box.innerHTML=`<span class="aav">${esc(p.avatar)}</span><div class="acctxt"><b>${esc(p.name)}</b><span class="note" id="acctSync">${syncState?esc(t("ac_"+syncState)):""}</span></div><button class="ghostbtn" id="acctEdit">${esc(t("ac_profile"))}</button>`;
+  box.innerHTML=`<span class="aav">${avHtml(p.avatar)}</span><div class="acctxt"><b>${esc(p.name)}</b><span class="note" id="acctSync">${syncState?esc(t("ac_"+syncState)):""}</span></div><button class="ghostbtn" id="acctEdit">${esc(t("ac_profile"))}</button>`;
   $("#acctEdit").onclick=()=>profileDlg(false);
 }
 async function renderPlayers(){
@@ -2886,7 +2967,7 @@ async function renderPlayers(){
       playersCache=pr.data.map(p=>({...p,s:sm.get(p.id)||{}})).sort((a,b)=>(b.s.badges||0)-(a.s.badges||0)||(b.s.best||0)-(a.s.best||0));
     }
     list.innerHTML=playersCache.length?`<div class="plist">${playersCache.map(p=>{const s=p.s,tr=s.tiers||{};
-      return `<button class="prow" data-id="${esc(p.id)}"><span class="pav">${esc(p.avatar)}</span><span class="pname"><b>${esc(p.name)}</b>${p.id===me.id?` <em>${esc(t("ac_you"))}</em>`:""}
+      return `<button class="prow" data-id="${esc(p.id)}"><span class="pav">${avHtml(p.avatar)}</span><span class="pname"><b>${esc(p.name)}</b>${p.id===me.id?` <em>${esc(t("ac_you"))}</em>`:""}
         <span class="note">${esc(t("ac_row",{g:fmt(s.games||0),v:s.visited||0,n:SITES.length}))}</span></span>
         <span class="ptiers">${["al","au","ag","cu"].map(k=>`<span class="pt t-${k}"><i class="tdot"></i>${tr[k]||0}</span>`).join("")}</span></button>`}).join("")}</div>`
       :`<p class="note">${esc(t("ac_noplayers"))}</p>`;
@@ -2899,12 +2980,14 @@ function statsForHome(){return me&&cloudStats?sumStats({...cloudStats,[DEVICE]:s
 /* ---------- start-up ---------- */
 async function setUser(u){
   const was=me&&me.id;me=u;
-  if(!u){myProfile=null;cloudStats=null;playersCache=null;setSync("");renderAccount();renderPlayers();if(!$("#start").hidden)renderHome();return}
+  if(!u){onlineLeave();myProfile=null;cloudStats=null;playersCache=null;leaguesCache=null;setSync("");renderAccount();renderPlayers();renderLeagues();renderOnlineBox();if(!$("#start").hidden)renderHome();return}
   if(was===u.id)return;
+  /* remember the game language on the account, so the next sign-in email comes in the same language */
+  try{if(!u.user_metadata||u.user_metadata.lang!==LANG)sb.auth.updateUser({data:{lang:LANG}})}catch(e){}
   const {data}=await sb.from("profiles").select("*").eq("id",u.id).maybeSingle();
   myProfile=data||null;renderAccount();
   if(!myProfile)profileDlg(true);else syncNow();
-  renderPlayers();
+  renderPlayers();renderLeagues();renderOnlineBox();
 }
 (function initAccounts(){
   $("#dlgWrap").addEventListener("click",e=>{if(e.target.id==="dlgWrap")closeDlg()});
@@ -2917,6 +3000,268 @@ async function setUser(u){
     addEventListener("online",()=>{if(syncState==="offline")syncNow()});
   }catch(e){console.warn("accounts",e);sb=null;renderAccount()}
 })();
+
+
+/* ===================== DAILY RESULTS & LEAGUES ===================== */
+/* Every finished daily challenge is also stored as a single, unchangeable row in daily_results.
+   Leagues add up those rows for their members over the league's dates. */
+async function pushDailyResults(){
+  if(!sb||!me)return;
+  const lim=today(Date.now()-59*864e5),rows=Object.entries(localDaily()).filter(([d,r])=>d>=lim&&r&&r.done)
+    .map(([d,r])=>({user_id:me.id,day:d,total:Math.max(0,Math.min(27500,Math.round(r.total||0))),sq:String(r.sq||"").slice(0,40)}));
+  if(!rows.length)return;
+  try{await sb.from("daily_results").upsert(rows,{onConflict:"user_id,day",ignoreDuplicates:true})}catch(e){}
+}
+var leaguesCache=null;
+const lgStatus=l=>{const d=today();return d<l.start_date?"soon":d>l.end_date?"done":"live"};
+const fmtDay=d=>new Date(d+"T12:00:00").toLocaleDateString(LOCALE,{day:"numeric",month:"short"});
+async function loadLeagues(){
+  const {data:ls,error}=await sb.from("leagues").select("*");if(error)throw error;
+  if(!ls.length)return [];
+  const {data:mem}=await sb.from("league_members").select("league_id,user_id").in("league_id",ls.map(l=>l.id));
+  const ids=[...new Set((mem||[]).map(m=>m.user_id))];
+  const from=ls.reduce((a,l)=>l.start_date<a?l.start_date:a,"9999"),to=ls.reduce((a,l)=>l.end_date>a?l.end_date:a,"0000");
+  const [{data:prof},{data:res}]=await Promise.all([
+    sb.from("profiles").select("id,name,avatar").in("id",ids),
+    sb.from("daily_results").select("user_id,day,total").in("user_id",ids).gte("day",from).lte("day",to)]);
+  const P=new Map((prof||[]).map(p=>[p.id,p]));
+  return ls.map(l=>{
+    const end=l.end_date<today()?l.end_date:today();
+    const rows=(mem||[]).filter(m=>m.league_id===l.id).map(m=>{
+      const mine=(res||[]).filter(r=>r.user_id===m.user_id&&r.day>=l.start_date&&r.day<=end);
+      const td=mine.find(r=>r.day===today());
+      return {id:m.user_id,name:(P.get(m.user_id)||{}).name||"?",avatar:(P.get(m.user_id)||{}).avatar,
+        total:mine.reduce((a,r)=>a+r.total,0),days:mine.length,today:td?td.total:null}});
+    rows.sort((a,b)=>b.total-a.total||b.days-a.days||a.name.localeCompare(b.name));
+    rows.forEach((r,i)=>r.rank=i>0&&rows[i-1].total===r.total?rows[i-1].rank:i+1);
+    return {...l,rows,status:lgStatus(l)};
+  }).sort((a,b)=>({live:0,soon:1,done:2}[a.status]-{live:0,soon:1,done:2}[b.status])||b.start_date.localeCompare(a.start_date));
+}
+async function renderLeagues(){
+  const box=$("#leaguesSec");if(!box)return;
+  if(!sb||!me){box.hidden=true;return}
+  box.hidden=false;const list=$("#leaguesBox");
+  $("#lgCreate").onclick=createLeagueDlg;$("#lgJoin").onclick=joinLeagueDlg;
+  try{
+    if(!leaguesCache)leaguesCache=await loadLeagues();
+    list.innerHTML=leaguesCache.length?`<div class="plist">${leaguesCache.map(l=>{const mine=l.rows.find(r=>r.id===me.id);
+      return `<button class="prow lgrow" data-id="${esc(l.id)}"><span class="pav lgicon">${l.status==="done"?"🏁":l.status==="soon"?"⏳":"🏆"}</span>
+        <span class="pname"><b>${esc(l.name)}</b><span class="note">${esc(fmtDay(l.start_date))} – ${esc(fmtDay(l.end_date))} · ${esc(t("lg_st_"+l.status))}</span></span>
+        <span class="lgrank">${mine?`#${mine.rank}<small>/${l.rows.length}</small>`:""}</span></button>`}).join("")}</div>`
+      :`<p class="note">${esc(t("lg_none"))}</p>`;
+    list.querySelectorAll(".lgrow").forEach(b=>b.onclick=()=>leagueDlg(b.dataset.id));
+  }catch(e){list.innerHTML=`<p class="note">${esc(t("ac_offline"))}</p>`}
+}
+function createLeagueDlg(){
+  const d0=today(),d1=today(Date.now()+29*864e5);
+  dlg(`<span class="kicker">${esc(t("lg_kicker"))}</span><h3>${esc(t("lg_new_h"))}</h3>
+    <p class="dlgp">${esc(t("lg_new_p"))}</p>
+    <form id="lgForm" class="dlgform col"><label class="fl" for="lgName">${esc(t("lg_name"))}</label>
+    <input id="lgName" maxlength="40" required placeholder="${esc(t("lg_name_ph"))}">
+    <div class="lgdates"><label><span class="fl">${esc(t("lg_from"))}</span><input type="date" id="lgFrom" required value="${d0}"></label>
+    <label><span class="fl">${esc(t("lg_to"))}</span><input type="date" id="lgTo" required value="${d1}"></label></div>
+    <button class="primary" type="submit">${esc(t("lg_create"))}</button></form><p class="err" id="lgErr" hidden></p>`);
+  $("#lgForm").onsubmit=async e=>{e.preventDefault();const err=$("#lgErr");err.hidden=true;
+    const name=$("#lgName").value.trim(),a=$("#lgFrom").value,b=$("#lgTo").value;
+    if(!name||!a||!b||b<a){err.textContent=t("lg_bad_dates");err.hidden=false;return}
+    const {data,error}=await sb.rpc("create_league",{p_name:name,p_start:a,p_end:b});
+    if(error||!data){err.textContent=t("ac_fail");err.hidden=false;return}
+    leaguesCache=null;await renderLeagues();leagueDlg((Array.isArray(data)?data[0]:data).id)};
+}
+function joinLeagueDlg(){
+  dlg(`<span class="kicker">${esc(t("lg_kicker"))}</span><h3>${esc(t("lg_join_h"))}</h3>
+    <p class="dlgp">${esc(t("lg_join_p"))}</p>
+    <form id="lgJForm" class="dlgform"><input id="lgCode" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="ABC234" class="codein">
+    <button class="primary" type="submit">${esc(t("lg_join"))}</button></form><p class="err" id="lgErr" hidden></p>`);
+  $("#lgJForm").onsubmit=async e=>{e.preventDefault();const err=$("#lgErr");err.hidden=true;
+    const code=$("#lgCode").value.trim().toUpperCase();
+    const {data,error}=await sb.rpc("join_league",{p_code:code});
+    if(error||!data){err.textContent=/full/i.test(error&&error.message||"")?t("lg_full"):t("lg_nocode");err.hidden=false;return}
+    leaguesCache=null;await renderLeagues();leagueDlg((Array.isArray(data)?data[0]:data).id)};
+}
+async function leagueDlg(id){
+  if(!leaguesCache){dlg(`<p class="note">${esc(t("x_loading"))}</p>`);try{leaguesCache=await loadLeagues()}catch(e){}}
+  const l=(leaguesCache||[]).find(x=>x.id===id);if(!l){dlg(`<p class="err">${esc(t("ac_fail"))}</p>`);return}
+  const owner=l.owner===me.id,daysTotal=Math.round((Date.parse(l.end_date)-Date.parse(l.start_date))/864e5)+1;
+  const left=l.status==="live"?Math.round((Date.parse(l.end_date)-Date.parse(today()))/864e5):null;
+  const shareTxt=t("lg_share",{n:l.name,c:l.code,u:location.origin+location.pathname});
+  dlg(`<span class="kicker">${esc(t("lg_kicker"))} · ${esc(t("lg_st_"+l.status))}</span><h3>${l.status==="done"&&l.rows[0]?"🏆 ":""}${esc(l.name)}</h3>
+    <p class="note">${esc(fmtDay(l.start_date))} – ${esc(fmtDay(l.end_date))} · ${esc(t("lg_days",{n:daysTotal}))}${left!=null?` · ${esc(t("lg_left",{n:left}))}`:""}</p>
+    <div class="lgcode"><span class="fl">${esc(t("lg_code"))}</span><b>${esc(l.code)}</b><button class="ghostbtn" id="lgCopy">${esc(t("lg_invite"))}</button></div>
+    ${l.status==="done"&&l.rows[0]?`<p class="fact">${esc(t("lg_winner",{n:l.rows[0].name}))}</p>`:""}
+    <table class="ptable lgtable"><thead><tr><th>#</th><th>${esc(t("player"))}</th><th class="num">${esc(t("lg_today"))}</th><th class="num">${esc(t("lg_daysp"))}</th><th class="num">${esc(t("points"))}</th></tr></thead><tbody>
+    ${l.rows.map(r=>`<tr class="${r.id===me.id?"me":""}"><td>${r.rank}</td><td><span class="pav xs">${avHtml(r.avatar)}</span> ${esc(r.name)}</td>
+      <td class="num">${l.status!=="live"?"":r.today==null?`<span class="note">–</span>`:fmt(r.today)}</td><td class="num">${r.days}</td><td class="num"><b>${fmt(r.total)}</b></td></tr>`).join("")}
+    </tbody></table>
+    <p class="note">${esc(t("lg_rule"))}</p>
+    ${owner?`<form id="lgEdit" class="dlgform col lgedit"><span class="fl">${esc(t("lg_edit"))}</span><input id="lgEName" maxlength="40" value="${esc(l.name)}">
+      <div class="lgdates"><label><span class="fl">${esc(t("lg_from"))}</span><input type="date" id="lgEFrom" value="${l.start_date}"></label><label><span class="fl">${esc(t("lg_to"))}</span><input type="date" id="lgETo" value="${l.end_date}"></label></div>
+      <button class="ghostbtn" type="submit">${esc(t("ac_save"))}</button></form>`:""}
+    <p class="err" id="lgErr" hidden></p>
+    <div class="dlglinks">${owner?`<button id="lgDel" class="danger">${esc(t("lg_delete"))}</button>`:`<button id="lgLeave" class="danger">${esc(t("lg_leave"))}</button>`}</div>`);
+  $("#lgCopy").onclick=async e=>{const b=e.currentTarget;
+    if(navigator.share){try{await navigator.share({text:shareTxt});return}catch(x){}}copyText(shareTxt,b)};
+  const fail=()=>{const x=$("#lgErr");x.textContent=t("ac_fail");x.hidden=false};
+  if(owner){
+    $("#lgEdit").onsubmit=async e=>{e.preventDefault();const name=$("#lgEName").value.trim(),a=$("#lgEFrom").value,b=$("#lgETo").value;
+      if(!name||!a||!b||b<a){const x=$("#lgErr");x.textContent=t("lg_bad_dates");x.hidden=false;return}
+      const {error}=await sb.from("leagues").update({name,start_date:a,end_date:b}).eq("id",l.id);if(error)return fail();
+      leaguesCache=null;await renderLeagues();leagueDlg(l.id)};
+    $("#lgDel").onclick=async e=>{const b=e.target;if(!b.dataset.armed){b.dataset.armed=1;b.textContent=t("lg_delete_sure");return}
+      const {error}=await sb.from("leagues").delete().eq("id",l.id);if(error)return fail();leaguesCache=null;closeDlg();renderLeagues()};
+  }else{
+    $("#lgLeave").onclick=async e=>{const b=e.target;if(!b.dataset.armed){b.dataset.armed=1;b.textContent=t("lg_leave_sure");return}
+      const {error}=await sb.from("league_members").delete().eq("league_id",l.id).eq("user_id",me.id);if(error)return fail();leaguesCache=null;closeDlg();renderLeagues()};
+  }
+}
+
+/* ===================== ONLINE GAMES ===================== */
+/* A room is a Supabase Realtime channel named after a short code. The host picks the mode and settings; when the
+   host starts, everyone builds the same game from a shared seed (the same trick as the daily challenge), plays it
+   on their own screen, and sends each guess to the room. The result of a round opens once everyone still in the room
+   has guessed. Party mode stays offline. */
+var ON=null;
+const ONLINE_MAX=8;
+function onCode(){const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<5;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+function onPresent(){
+  const out={};if(!ON||!ON.ch)return out;
+  try{for(const [k,arr] of Object.entries(ON.ch.presenceState()))if(arr&&arr[0])out[k]=arr[0]}catch(e){}
+  return out;
+}
+function onHostMeta(){return Object.values(onPresent()).find(m=>m.host)||null}
+function onCfgFromSetup(){
+  const sel=x=>{const e=$("#"+x);return e&&e.selectedOptions[0]?e.selectedOptions[0].text:""};
+  return {mode:MODE,pool:$("#pool").value,poolTxt:sel("pool"),diff:$("#diff").value,diffTxt:sel("diff").split(":")[0],
+    spread:$("#spread").value,rounds:$("#rounds").value,turning:$("#move").checked};
+}
+function onCfgText(c){if(!c)return "";const parts=[modeLabel(c.mode)];
+  if(c.mode!=="daily"){if(c.poolTxt)parts.push(c.poolTxt);if(["classic","blitz","blitz15"].includes(c.mode)&&c.diffTxt)parts.push(c.diffTxt);parts.push(t("hs_rounds",{n:c.rounds}))}
+  return parts.join(" · ")}
+function onlineCreate(){
+  if(!me||!myProfile){signInDlg();return}
+  if(MODE==="party"){toast(t("on_noparty"));return}
+  onlineOpen(onCode(),true,onCfgFromSetup());
+}
+function onlineJoinDlg(){
+  if(!me||!myProfile){signInDlg();return}
+  dlg(`<span class="kicker">${esc(t("on_kicker"))}</span><h3>${esc(t("on_join_h"))}</h3><p class="dlgp">${esc(t("on_join_p"))}</p>
+    <form id="onJForm" class="dlgform"><input id="onCodeIn" maxlength="5" autocapitalize="characters" autocomplete="off" placeholder="K7RTA" class="codein">
+    <button class="primary" type="submit">${esc(t("on_join"))}</button></form><p class="err" id="onErr" hidden></p>`);
+  $("#onJForm").onsubmit=e=>{e.preventDefault();const c=$("#onCodeIn").value.trim().toUpperCase();if(c.length===5)onlineOpen(c,false,null)};
+}
+function onlineOpen(code,host,cfg){
+  onlineLeave();
+  const meta={id:me.id,name:myProfile.name,avatar:myProfile.avatar,host,cfg:host?cfg:null,started:false,at:Date.now()};
+  ON={code,host,meta,cfg,ch:null,started:false,players:[],info:{},res:{},seed:null,joinedAt:Date.now()};
+  ON.info[me.id]={name:meta.name,avatar:meta.avatar};
+  const ch=sb.channel("hg-room-"+code,{config:{broadcast:{self:false},presence:{key:me.id}}});ON.ch=ch;
+  ch.on("presence",{event:"sync"},()=>{if(!ON||ON.ch!==ch)return;
+      for(const [k,m] of Object.entries(onPresent()))ON.info[k]={name:m.name,avatar:m.avatar};
+      if(!ON.started)renderLobby();else onlineCheck()})
+    .on("broadcast",{event:"start"},({payload})=>{if(ON&&ON.ch===ch&&!ON.host&&!ON.started&&payload&&payload.players&&payload.players.includes(me.id))onlineStart(payload)})
+    .on("broadcast",{event:"guess"},({payload})=>{if(ON&&ON.ch===ch)onlineGotGuess(payload)})
+    .subscribe(async st=>{
+      if(st==="SUBSCRIBED"){try{await ch.track(meta)}catch(e){}renderLobby()}
+      else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"){if(ON&&ON.ch===ch&&!ON.started)renderLobby(t("on_conn"))}
+    });
+  renderLobby();
+  if(!host)setTimeout(()=>{if(ON&&ON.ch===ch&&!ON.started&&!onHostMeta())renderLobby(t("on_nogame"))},7000);
+}
+function renderLobby(errMsg){
+  if(!ON||ON.started)return;
+  const pres=onPresent(),hostM=onHostMeta(),cfg=ON.host?ON.cfg:hostM&&hostM.cfg;
+  if(!ON.host&&hostM&&hostM.started){errMsg=t("on_started")}
+  const people=Object.values(pres).sort((a,b)=>(b.host?1:0)-(a.host?1:0)||a.at-b.at);
+  const full=people.length>ONLINE_MAX;
+  dlg(`<span class="kicker">${esc(t("on_kicker"))}</span><h3>${esc(t(ON.host?"on_lobby_host":"on_lobby"))}</h3>
+    <div class="lgcode"><span class="fl">${esc(t("on_code"))}</span><b>${esc(ON.code)}</b>${ON.host?`<button class="ghostbtn" id="onInvite">${esc(t("lg_invite"))}</button>`:""}</div>
+    <p class="dlgp">${cfg?esc(onCfgText(cfg)):esc(t("on_waiting_host"))}</p>
+    <div class="plist">${people.map(m=>`<div class="prow static"><span class="pav">${avHtml(m.avatar)}</span><span class="pname"><b>${esc(m.name)}</b>${m.host?`<span class="note">${esc(t("on_host"))}</span>`:""}</span>${m.id===me.id?`<em class="note">${esc(t("ac_you"))}</em>`:""}</div>`).join("")||`<p class="note">${esc(t("x_loading"))}</p>`}</div>
+    ${errMsg?`<p class="err">${esc(errMsg)}</p>`:""}
+    ${ON.host?`<button class="primary" id="onStart" ${people.length<2||full?"disabled":""}>${esc(people.length<2?t("on_need2"):full?t("on_full"):t("on_start",{n:people.length}))}</button>`
+      :`<p class="note">${esc(t("on_wait_start"))}</p>`}
+    <p class="note dlgnote">${esc(t("on_note"))}</p>
+    <div class="dlglinks"><button id="onLeave" class="danger">${esc(t("on_leave"))}</button></div>`);
+  $("#dlgX").onclick=()=>{onlineLeave();closeDlg()};
+  $("#onLeave").onclick=()=>{onlineLeave();closeDlg()};
+  if(ON.host){
+    $("#onInvite").onclick=async e=>{const b=e.currentTarget,txt=t("on_share",{c:ON.code,u:location.origin+location.pathname});
+      if(navigator.share){try{await navigator.share({text:txt});return}catch(x){}}copyText(txt,b)};
+    const sb_=$("#onStart");if(sb_)sb_.onclick=()=>{
+      const ids=Object.keys(onPresent()).slice(0,ONLINE_MAX);
+      const payload={seed:Math.random().toString(36).slice(2,12),cfg:ON.cfg,players:ids};
+      ON.ch.send({type:"broadcast",event:"start",payload});
+      try{ON.ch.track({...ON.meta,started:true})}catch(e){}
+      onlineStart(payload)};
+  }
+}
+function onlineStart(p){
+  ON.started=true;ON.seed=p.seed;ON.cfg=p.cfg;ON.players=p.players.slice();
+  if(!ON.players.includes(me.id))ON.players.unshift(me.id);
+  ON.players=[me.id,...ON.players.filter(x=>x!==me.id)];   /* you first, so your guess keeps the usual colour */
+  closeDlg();
+  startGame({online:ON,cfg:p.cfg,seed:p.seed});
+}
+function onlineActive(){const pres=onPresent();return ON.players.filter(id=>id===me.id||pres[id]||(ON.res[id]&&ON.res[id].fin))}
+function onlineSendGuess(r){
+  const payload={uid:me.id,name:myProfile.name,avatar:myProfile.avatar,round:G.round,pts:r.pts,d:r.d,bonusOk:r.bonusOk,
+    guess:r.guess?{lat:r.guess.lat,lng:r.guess.lng}:null,fin:G.round>=G.rounds};
+  onlineGotGuess(payload);
+  try{ON.ch.send({type:"broadcast",event:"guess",payload})}catch(e){}
+}
+function onlineGotGuess(p){
+  if(!ON||!p||!p.uid)return;
+  ON.info[p.uid]={name:p.name,avatar:p.avatar};
+  (ON.res[p.uid]=ON.res[p.uid]||{})[p.round]=p;if(p.fin)ON.res[p.uid].fin=true;
+  onlineCheck();
+}
+function onlineCheck(){
+  if(!ON||!G||!G.online)return;
+  if(G.phase==="waiting")onlineMaybeReveal();
+  else if(G.phase==="result"){const e=$("#onTable");if(e)e.innerHTML=onlineTableHtml(G.round)}
+  else if(G.phase==="final"){const e=$("#onFinal");if(e)e.innerHTML=onlineFinalHtml()}
+}
+function onlineMaybeReveal(){
+  const missing=onlineActive().filter(id=>!(ON.res[id]&&ON.res[id][G.round]));
+  if(!missing.length){reveal();return}
+  G.phase="waiting";
+  ["#hintBtn","#hintTxt","#turns","#timerBox","#dock"].forEach(x=>$(x).hidden=true);
+  $("#result").innerHTML=`<span class="lbl">${t("round_of",{r:G.round,n:G.rounds})}</span><h3>${esc(t("on_waiting"))}</h3>
+    <div class="plist">${onlineActive().map(id=>{const i=ON.info[id]||{},ok=ON.res[id]&&ON.res[id][G.round];
+      return `<div class="prow static"><span class="pav">${avHtml(i.avatar)}</span><span class="pname"><b>${esc(i.name||"?")}</b></span><span>${ok?"✓":"…"}</span></div>`}).join("")}</div>
+    <button class="ghostbtn" id="onQuit">${esc(t("on_leave"))}</button>`;
+  $("#result").hidden=false;$("#onQuit").onclick=goHome;
+}
+/* guesses for the map: you first, then the others in a fixed order */
+function onlineGuesses(round,mine){return ON.players.map(id=>id===me.id?mine:(ON.res[id]&&ON.res[id][round]?{guess:ON.res[id][round].guess}:null))}
+function onlineTotals(upto){
+  return onlineActive().concat(ON.players.filter(id=>!onlineActive().includes(id))).map(id=>{let tot=0,n=0;const r=ON.res[id]||{};
+    for(let k=1;k<=upto;k++)if(r[k]){tot+=r[k].pts;n++}
+    return {id,i:ON.players.indexOf(id),tot,n,info:ON.info[id]||{},left:!onlineActive().includes(id)}}).sort((a,b)=>b.tot-a.tot);
+}
+function onlineTableHtml(round){
+  return `<table><thead><tr><th>${t("player")}</th><th class="num">${t("off_by")}</th><th class="num">${t("pts")}</th><th class="num">${t("points")}</th></tr></thead><tbody>
+    ${onlineTotals(round).map(x=>{const r=(ON.res[x.id]||{})[round];
+      return `<tr><td style="color:${COLORS[x.i%COLORS.length]}">${esc(x.info.name||"?")}${x.left?` <span class="note">(${esc(t("on_left"))})</span>`:""}</td><td class="num">${r?fmtKm(r.d):"…"}</td><td class="num">${r?fmt(r.pts):"…"}</td><td class="num"><b>${fmt(x.tot)}</b></td></tr>`}).join("")}
+    </tbody></table>`;
+}
+function onlineFinalHtml(){
+  const rows=onlineTotals(G.rounds),allDone=rows.every(x=>x.left||x.n>=G.round);
+  return `<table><thead><tr><th>#</th><th>${t("player")}</th><th class="num">${t("on_rounds")}</th><th class="num">${t("points")}</th></tr></thead><tbody>
+    ${rows.map((x,k)=>`<tr><td>${k+1}</td><td style="color:${COLORS[x.i%COLORS.length]}">${allDone&&k===0?"🏆 ":""}${esc(x.info.name||"?")}${x.left?` <span class="note">(${esc(t("on_left"))})</span>`:""}</td><td class="num">${x.n}/${G.round}</td><td class="num"><b>${fmt(x.tot)}</b></td></tr>`).join("")}
+    </tbody></table>${allDone?"":`<p class="note">${esc(t("on_still"))}</p>`}`;
+}
+function onlineLeave(){
+  if(!ON)return;const ch=ON.ch;ON=null;
+  try{ch.untrack()}catch(e){}try{sb.removeChannel(ch)}catch(e){}
+}
+function renderOnlineBox(){
+  const box=$("#onlineBox");if(!box)return;
+  box.hidden=!(sb&&me&&myProfile);
+  $("#onCreate").disabled=MODE==="party";
+  $("#onCreate").onclick=onlineCreate;$("#onJoin").onclick=onlineJoinDlg;
+  $("#onPartyNote").hidden=MODE!=="party";
+}
 
 /* ===================== LAYOUT ===================== */
 /* Spot buttons: centred, but on phones held sideways and small tablets the map in the bottom-right
