@@ -184,6 +184,41 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .kicker{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel)}
 .disclaimer{border-left:3px solid var(--accent);padding:4px 0 4px 12px;font-size:13px;color:#C3CDD4;max-width:56ch}
 .disclaimer b{color:var(--ink);font-weight:600}
+/* accounts */
+.acct{display:flex;align-items:center;gap:12px;border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--panel)}
+.acct[hidden]{display:none}
+.acct .acctxt{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}.acct .acctxt b{font-size:15px}
+.aav,.pav{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:21px;background:var(--panel2);border:1px solid var(--rule)}
+.dlg{position:relative;max-height:calc(100dvh - 32px);overflow:auto}
+.dlg h3{font-size:22px;color:var(--ink)}
+.dlgx{position:absolute;top:10px;right:12px;background:none;border:0;color:var(--muted);font-size:24px;line-height:1;cursor:pointer;padding:4px}
+.dlgp{font-size:15px;line-height:1.5;color:var(--ink)}
+.dlgform{display:flex;gap:8px;flex-wrap:wrap}.dlgform.col{flex-direction:column}
+.dlgform input{flex:1;min-width:0;font-size:16px;padding:10px 12px;border-radius:8px;border:1px solid var(--rule);background:var(--bg);color:var(--ink)}
+.dlgform[hidden]{display:none}
+.dlgnote{font-size:12.5px}
+.dlglinks{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--rule);padding-top:12px}
+.dlglinks button{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13.5px}
+.dlglinks .danger{color:var(--bad)}
+.avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
+.avbtn{font-size:21px;height:42px;border-radius:8px;border:1px solid var(--rule);background:var(--panel2);cursor:pointer}
+.avbtn[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.plist{display:flex;flex-direction:column;gap:6px}
+.prow{display:flex;align-items:center;gap:10px;text-align:left;width:100%;border:1px solid var(--rule);border-radius:8px;padding:8px 10px;background:var(--panel);color:var(--ink);cursor:pointer}
+.prow:hover{border-color:var(--accent)}
+.pname{display:flex;flex-direction:column;flex:1;min-width:0}.pname em{font-style:normal;color:var(--muted);font-size:12px}
+.ptiers{display:flex;gap:8px;flex:none}.pt{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--muted)}
+.pt .tdot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.phead{display:flex;align-items:center;gap:12px;padding-right:28px}.phead .pav{width:48px;height:48px;font-size:27px}
+.pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pstats div{border:1px solid var(--rule);border-radius:8px;padding:8px;display:flex;flex-direction:column}
+.pstats b{font-size:18px;color:var(--ink)}.pstats span{font-size:12px;color:var(--muted)}
+.pbadges{display:flex;flex-wrap:wrap;gap:6px}
+.badge.mini{flex-direction:row;align-items:center;gap:6px;padding:4px 8px 4px 4px;border-radius:999px}
+.badge.mini .bico{width:24px;height:24px;font-size:13px}.badge.mini.t-al .bico{width:27px;height:24px}.badge.mini .bimg{width:23px;height:23px}
+.badge.mini b{font-size:12.5px}
+.ph4{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin-top:6px}
+.ptable{width:100%;font-size:13.5px}.ptable td{padding:4px 0;border-bottom:1px solid var(--rule)}
 .factlink{align-self:flex-start;font-size:13px;color:#E6ECEF;background:rgba(14,21,27,.55);border:1px solid rgba(230,236,239,.35);padding:6px 12px;border-radius:999px;cursor:pointer}
 .factlink:hover{border-color:var(--accent)}
 .factwrap{position:fixed;inset:0;z-index:40;background:rgba(8,12,16,.62);display:grid;place-items:center;padding:16px}
@@ -374,6 +409,7 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
     <p class="disclaimer" data-i18n-html="disclaimer"></p>
   </form>
 </section>
+<div class="factwrap" id="dlgWrap" hidden><div class="factcard dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
 <div class="factwrap" id="factWrap" hidden>
   <div class="factcard" role="dialog" aria-modal="true" aria-labelledby="factH">
     <span class="kicker" id="factCat"></span>
@@ -397,6 +433,7 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
     </div>
   </div>
   <div class="panelcol">
+    <div class="acct" id="acct" hidden></div>
     <div class="head"><span class="kicker" style="color:var(--muted)" data-i18n="setup_kicker"></span><h2 data-i18n="setup_h"></h2></div>
 
     <div class="field" id="keyField">
@@ -472,6 +509,11 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
       <div id="histBox"></div>
       <div class="links"><button id="histMore" hidden></button><button id="histClear" hidden data-i18n="h_clear"></button></div>
     </div>
+    <div class="box" id="playersSec" hidden>
+      <h2 data-i18n="players_h"></h2>
+      <p class="note" data-i18n="players_note"></p>
+      <div id="playersBox"></div>
+    </div>
     <div class="box">
       <h2 data-i18n="your_stats"></h2>
       <div id="statsBox"></div>
@@ -489,6 +531,7 @@ const HEROES=[{"src": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA
 (function(){try{const n=Math.floor(Math.random()*HEROES.length),h=HEROES[n];window.__heroIdx=n,i=document.getElementById("heroImg");i.src=h.src;i.alt=h.alt;i.style.objectPosition=h.pos;document.getElementById("heroCredit").textContent=h.cap}catch(e){}})();
 </script>
 
+<script src="supabase.js"></script>
 <script>
 /* ===================== LANGUAGE ===================== */
 const LANG=(()=>{try{return localStorage.getItem("hg-lang")==="no"?"no":"en"}catch(e){return "en"}})();
@@ -619,6 +662,27 @@ const STR={
  again:["Play again","Spill igjen"],again_daily:["Play again (practice)","Spill igjen (øving)"],home:["Back to start","Tilbake til start"],
  explore_after:["Explore all Hydro locations","Utforsk alle Hydro-stedene"],
  badge_earned:["Badge earned: {b}","Nytt merke: {b}"],
+ players_h:["Players","Spillere"],players_note:["Tap a player to see their profile.","Trykk på en spiller for å se profilen."],
+ ac_kicker:["Account","Konto"],ac_in_h:["Sign in","Logg inn"],
+ ac_in_p:["Enter your email and we'll send you a sign-in link and a 6-digit code. No password needed.","Skriv inn e-postadressen din, så sender vi deg en innloggingslenke og en sekssifret kode. Du trenger ikke passord."],
+ ac_email_ph:["you@example.com","deg@eksempel.no"],ac_send:["Send sign-in email","Send innloggings-e-post"],ac_resend:["Send again","Send på nytt"],
+ ac_sent:["Check {e}. Tap the link in the email, or type the code here.","Sjekk {e}. Trykk på lenken i e-posten, eller skriv inn koden her."],
+ ac_code_ph:["6-digit code","Sekssifret kode"],ac_verify:["Sign in","Logg inn"],
+ ac_rate:["Too many emails right now. Wait a little and try again.","For mange e-poster akkurat nå. Vent litt og prøv igjen."],
+ ac_fail:["Something went wrong. Check your connection and try again.","Noe gikk galt. Sjekk nettforbindelsen og prøv igjen."],
+ ac_badcode:["That code didn't work. Check it, or send a new email.","Koden fungerte ikke. Sjekk den, eller send en ny e-post."],
+ ac_privacy:["We store your email (only for signing in), your display name and avatar, and your game progress. Other signed-in players can see your name, avatar, scores and badges, never your email. You can delete your account at any time under Profile.","Vi lagrer e-postadressen din (bare for innlogging), visningsnavn og avatar, og fremgangen din i spillet. Andre innloggede spillere kan se navn, avatar, poeng og merker, aldri e-postadressen. Du kan slette kontoen når som helst under Profil."],
+ ac_welcome:["Welcome!","Velkommen!"],ac_setup_h:["Choose your player name","Velg spillernavn"],ac_edit_h:["Your profile","Profilen din"],
+ ac_name:["Display name","Visningsnavn"],ac_name_ph:["e.g. Karin","f.eks. Karin"],ac_avatar:["Avatar","Avatar"],ac_save:["Save","Lagre"],
+ ac_signout:["Sign out","Logg ut"],ac_delete:["Delete account","Slett konto"],ac_delete_sure:["Tap again to delete for good","Trykk igjen for å slette for godt"],
+ ac_deleted:["Account deleted. Your progress is still saved in this browser.","Kontoen er slettet. Fremgangen din er fortsatt lagret i denne nettleseren."],
+ ac_since:["Playing since {d}","Spiller siden {d}"],ac_games:["games","spill"],ac_best:["best score","beste poengsum"],ac_visited:["locations","steder"],
+ ac_countries:["countries","land"],ac_streak:["daily streak","daglig rekke"],ac_nobadges:["No badges yet.","Ingen merker ennå."],ac_recent:["Recent games","Siste spill"],
+ ac_out_h:["Play with an account","Spill med konto"],ac_out_p:["Save your progress across devices and see other players' profiles.","Lagre fremgangen på alle enhetene dine og se andre spilleres profiler."],
+ ac_in:["Sign in","Logg inn"],ac_profile:["Profile","Profil"],ac_saving:["Saving…","Lagrer …"],ac_saved:["Progress saved","Fremgang lagret"],
+ ac_offline:["Offline. Progress will be saved when you're back online.","Frakoblet. Fremgangen lagres når du er på nett igjen."],
+ ac_you:["you","deg"],ac_row:["{g} games · {v}/{n} locations","{g} spill · {v}/{n} steder"],ac_noplayers:["No players yet.","Ingen spillere ennå."],
+
  tier_al:["Aluminium","Aluminium"],tier_au:["Gold","Gull"],tier_ag:["Silver","Sølv"],tier_cu:["Bronze","Bronse"],
  bf_all:["All","Alle"],bf_on:["Earned","Oppnådd"],bf_off:["Not yet","Ikke ennå"],
  badge_none:["No badges here yet — keep playing!","Ingen merker her ennå – fortsett å spille!"],
@@ -1735,7 +1799,7 @@ function renderBadges(){
   $("#badgeBox").innerHTML=html||`<p class="note">${esc(t("badge_none"))}</p>`;
 }
 function renderHome(){
-  const st=store.json("hg-stats",null);
+  const st=statsForHome();
   $("#statsClear").hidden=!(st&&st.rounds);
   if(!st||!st.rounds){$("#statsBox").innerHTML=`<p class="note">${t("st_empty")}</p>`}
   else{
@@ -1752,6 +1816,7 @@ function renderHome(){
   renderHistory();
   const b=earned();
   renderBadges();
+  if(me)renderPlayers();
   const dr=store.json("hg-daily-"+today(),null),streak=store.json("hg-streak",{n:0,last:""});
   $("#dailyDone").textContent=dr?t("daily_played",{pts:fmt(dr.total)})+(streak.n>1?" · "+t("streak_n",{n:streak.n}):""):streak.n>1&&streak.last?t("streak_keep",{n:streak.n}):"";
 }
@@ -2649,6 +2714,209 @@ $("#gateForm").addEventListener("submit",e=>{
   if(hashStr($("#gateCode").value.trim())===ACCESS_HASH){store.set("hg-access",String(ACCESS_HASH));gateOpen()}
   else{const er=$("#gateErr");er.textContent=t("gate_err");er.hidden=false;$("#gateCode").select()}
 });
+
+
+/* ===================== ACCOUNTS (Supabase) ===================== */
+/* Sign-in, public profiles and cloud saving. The browser only ever holds the public ("publishable") key;
+   the database rules in supabase-setup.sql decide what each player may read and change.
+   Without supabase.js (or offline) the game simply runs as before, saving in this browser only. */
+var SB_URL="https://jpmfocalbgkigkrkddkw.supabase.co",SB_KEY="sb_publishable_-XYwjr2fhuzZqIbwHKL3Iw_PPaz39mn";
+var sb=null,me=null,myProfile=null,cloudStats=null,syncState="",syncTimer=null,syncBusy=false,applying=false,playersCache=null;
+var AVATARS=["🧭","🦊","🐻","🦉","🐺","🦅","🐋","🦌","🐧","🐙","🦁","🐢","🚀","⚡","🔥","💎","🏔️","🌊","🎯","🧲"];
+var DEVICE=store.get("hg-device")||(()=>{const d=Math.random().toString(36).slice(2,10);store.set("hg-device",d);return d})();
+
+/* ---------- local <-> cloud data ---------- */
+function localDaily(){
+  const out={};
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^hg-daily-\d{4}-\d{2}-\d{2}$/.test(k)){const r=store.json(k,null);if(r&&r.done)out[k.slice(9)]=r}}}catch(e){}
+  return out;
+}
+function localData(){
+  return {badges:earned(),history:store.json("hg-history",[]),seen:[...seen],tseen:{...tseen},daily:localDaily(),
+    fact_days:store.json("hg-fact-days",[]),stats:{[DEVICE]:store.json("hg-stats",null)}};
+}
+function mergeData(a,b){
+  a=a||{};b=b||{};const m={};
+  m.badges={...(a.badges||{})};for(const[k,v]of Object.entries(b.badges||{}))if(!m.badges[k]||String(v)<String(m.badges[k]))m.badges[k]=v;
+  const h=new Map();[...(a.history||[]),...(b.history||[])].forEach(g=>{if(g&&g.t!=null&&!h.has(g.t))h.set(g.t,g)});
+  m.history=[...h.values()].sort((x,y)=>y.t-x.t).slice(0,500);
+  m.seen=[...new Set([...(a.seen||[]),...(b.seen||[])])];
+  m.tseen={...(a.tseen||{})};for(const[k,v]of Object.entries(b.tseen||{}))m.tseen[k]=Math.max(m.tseen[k]||0,v||0);
+  m.daily={...(a.daily||{})};for(const[k,v]of Object.entries(b.daily||{}))if(!m.daily[k]||(!m.daily[k].done&&v&&v.done))m.daily[k]=v;
+  m.fact_days=[...new Set([...(a.fact_days||[]),...(b.fact_days||[])])].sort().slice(-400);
+  m.stats={...(a.stats||{})};for(const[k,v]of Object.entries(b.stats||{}))if(v)m.stats[k]=v;
+  return m;
+}
+function streakFrom(daily){
+  const days=Object.keys(daily||{}).filter(d=>daily[d]&&daily[d].done).sort();if(!days.length)return {n:0,last:""};
+  let n=1;for(let i=days.length-1;i>0;i--){const a=Date.parse(days[i]+"T12:00:00Z"),b=Date.parse(days[i-1]+"T12:00:00Z");if(Math.round((a-b)/864e5)===1)n++;else break}
+  return {n,last:days.at(-1)};
+}
+function sumStats(by){
+  const out={rounds:0,dist:0,pts:0,bonus:0,reg:{}};
+  Object.values(by||{}).forEach(s=>{if(!s)return;out.rounds+=s.rounds||0;out.dist+=s.dist||0;out.pts+=s.pts||0;out.bonus+=s.bonus||0;
+    for(const[k,v]of Object.entries(s.reg||{})){out.reg[k]=out.reg[k]||{n:0,dist:0};out.reg[k].n+=v.n||0;out.reg[k].dist+=v.dist||0}});
+  return out;
+}
+function applyData(m){
+  applying=true;
+  try{
+    store.put("hg-badges",m.badges);store.put("hg-history",m.history);
+    m.seen.forEach(x=>seen.add(x));store.put("hg-seen",[...seen]);
+    Object.assign(tseen,m.tseen);store.put("hg-tseen",tseen);
+    for(const[d,r]of Object.entries(m.daily)){const k="hg-daily-"+d,cur=store.json(k,null);if(!cur||(!cur.done&&r.done))store.put(k,r)}
+    store.put("hg-fact-days",m.fact_days);
+    const s=streakFrom(m.daily),cur=store.json("hg-streak",{n:0,last:""});if(s.last>cur.last||(s.last===cur.last&&s.n>cur.n))store.put("hg-streak",s);
+    cloudStats=m.stats;
+  }finally{applying=false}
+}
+function summaryOf(m){
+  const games=(m.history||[]).filter(g=>g.mode!=="party");
+  const vis=SITES.filter(x=>(m.seen||[]).includes(x.town));
+  const tiers={al:0,au:0,ag:0,cu:0};BADGES.forEach(b=>{if((m.badges||{})[b.id])tiers[b.tier]++});
+  const st=sumStats(m.stats),sk=streakFrom(m.daily);
+  return {games:games.length,best:games.reduce((a,g)=>Math.max(a,g.total||0),0),visited:vis.length,countries:new Set(vis.map(x=>x.country)).size,
+    badges:Object.keys(m.badges||{}).filter(id=>BADGES.some(b=>b.id===id)).length,tiers,rounds:st.rounds,
+    streak:(sk.last===today()||sk.last===today(Date.now()-864e5))?sk.n:0,dailies:Object.keys(m.daily||{}).length,last:games[0]?games[0].t:null};
+}
+/* pull the cloud copy, merge it with this browser's, keep the result in both places */
+async function syncNow(){
+  if(!sb||!me||syncBusy)return;syncBusy=true;setSync("saving");
+  try{
+    const {data,error}=await sb.from("player_data").select("*").eq("user_id",me.id).maybeSingle();if(error)throw error;
+    const m=mergeData(data||{},localData());applyData(m);
+    const row={user_id:me.id,...m,summary:summaryOf(m),updated_at:new Date().toISOString()};
+    const up=await sb.from("player_data").upsert(row,{onConflict:"user_id"});if(up.error)throw up.error;
+    setSync("saved");playersCache=null;
+    if(!$("#start").hidden)renderHome();
+  }catch(e){console.warn("sync",e);setSync("offline")}
+  finally{syncBusy=false}
+}
+function scheduleSync(){if(!sb||!me||applying)return;clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,1500)}
+{const put=store.put;store.put=function(k,v){put.call(this,k,v);if(/^hg-(badges|history|seen|tseen|daily-|fact-days|stats)/.test(k))scheduleSync()}}
+function setSync(s){syncState=s;const e=$("#acctSync");if(e)e.textContent=s?t("ac_"+s):""}
+
+/* ---------- dialogs ---------- */
+function dlg(html){$("#dlg").innerHTML=html+`<button class="dlgx" id="dlgX" aria-label="${esc(t("x_close"))}">×</button>`;$("#dlgWrap").hidden=false;$("#dlgX").onclick=closeDlg;
+  const f=$("#dlg").querySelector("input,button.primary");if(f)setTimeout(()=>f.focus(),30)}
+function closeDlg(){$("#dlgWrap").hidden=true}
+function signInDlg(){
+  dlg(`<span class="kicker">${esc(t("ac_kicker"))}</span><h3>${esc(t("ac_in_h"))}</h3>
+    <p class="dlgp">${esc(t("ac_in_p"))}</p>
+    <form id="acForm" class="dlgform"><input type="email" id="acEmail" required autocomplete="email" placeholder="${esc(t("ac_email_ph"))}" value="${esc(store.get("hg-ac-email")||"")}">
+    <button class="primary" type="submit">${esc(t("ac_send"))}</button></form>
+    <form id="acCodeForm" class="dlgform" hidden><input id="acCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="${esc(t("ac_code_ph"))}">
+    <button class="primary" type="submit">${esc(t("ac_verify"))}</button></form>
+    <p class="err" id="acErr" hidden></p><p class="note dlgnote">${esc(t("ac_privacy"))}</p>`);
+  const err=m=>{const e=$("#acErr");e.textContent=m;e.hidden=!m};
+  $("#acForm").onsubmit=async e=>{e.preventDefault();err("");const email=$("#acEmail").value.trim();store.set("hg-ac-email",email);
+    const b=e.target.querySelector("button");b.disabled=true;
+    const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
+    b.disabled=false;
+    if(error){err(/rate|seconds|many/i.test(error.message)?t("ac_rate"):t("ac_fail"));return}
+    $("#acCodeForm").hidden=false;$("#acForm").querySelector("button").textContent=t("ac_resend");
+    $(".dlgp").textContent=t("ac_sent",{e:email});setTimeout(()=>$("#acCode").focus(),30)};
+  $("#acCodeForm").onsubmit=async e=>{e.preventDefault();err("");
+    const email=$("#acEmail").value.trim(),token=$("#acCode").value.trim();
+    let {error}=await sb.auth.verifyOtp({email,token,type:"email"});
+    if(error)({error}=await sb.auth.verifyOtp({email,token,type:"signup"}));  /* first sign-in can use the sign-up code */
+    if(error){err(t("ac_badcode"));return}closeDlg()};
+}
+function profileDlg(first){
+  const p=myProfile||{name:"",avatar:AVATARS[0]};let av=p.avatar;
+  dlg(`<span class="kicker">${esc(t(first?"ac_welcome":"ac_kicker"))}</span><h3>${esc(t(first?"ac_setup_h":"ac_edit_h"))}</h3>
+    <form id="pfForm" class="dlgform col"><label class="fl" for="pfName">${esc(t("ac_name"))}</label>
+    <input id="pfName" maxlength="30" required value="${esc(p.name)}" placeholder="${esc(t("ac_name_ph"))}">
+    <span class="fl">${esc(t("ac_avatar"))}</span><div class="avgrid">${AVATARS.map(a=>`<button type="button" class="avbtn" aria-pressed="${a===av}" data-a="${a}">${a}</button>`).join("")}</div>
+    <button class="primary" type="submit">${esc(t("ac_save"))}</button></form><p class="err" id="pfErr" hidden></p>
+    ${first?"":`<div class="dlglinks"><button id="pfOut">${esc(t("ac_signout"))}</button><button id="pfDel" class="danger">${esc(t("ac_delete"))}</button></div>`}`);
+  $("#dlg").querySelectorAll(".avbtn").forEach(b=>b.onclick=()=>{av=b.dataset.a;$("#dlg").querySelectorAll(".avbtn").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  $("#pfForm").onsubmit=async e=>{e.preventDefault();const name=$("#pfName").value.trim().slice(0,30);if(!name)return;
+    const {data,error}=await sb.from("profiles").upsert({id:me.id,name,avatar:av,updated_at:new Date().toISOString()},{onConflict:"id"}).select().single();
+    if(error){const x=$("#pfErr");x.textContent=t("ac_fail");x.hidden=false;return}
+    myProfile=data;playersCache=null;closeDlg();renderAccount();renderPlayers();if(first)syncNow()};
+  if(!first){
+    $("#pfOut").onclick=async()=>{await sb.auth.signOut();closeDlg()};
+    $("#pfDel").onclick=async e=>{const b=e.target;if(!b.dataset.armed){b.dataset.armed=1;b.textContent=t("ac_delete_sure");return}
+      const {error}=await sb.rpc("delete_my_account");if(error){const x=$("#pfErr");x.textContent=t("ac_fail");x.hidden=false;return}
+      await sb.auth.signOut();closeDlg();toast(t("ac_deleted"))};
+  }
+}
+async function playerDlg(id){
+  dlg(`<p class="note">${esc(t("x_loading"))}</p>`);
+  const [pr,pd]=await Promise.all([sb.from("profiles").select("*").eq("id",id).maybeSingle(),sb.from("player_data").select("*").eq("user_id",id).maybeSingle()]);
+  if(pr.error||!pr.data){dlg(`<p class="err">${esc(t("ac_fail"))}</p>`);return}
+  const p=pr.data,d=pd.data||{},s=summaryOf(d),b=d.badges||{};
+  const tierRow=TIERS.map(([tier,ids])=>{const got=ids.filter(i=>b[i]);if(!got.length)return "";
+    return `<h4 class="tierh t-${tier}"><i class="tdot"></i>${esc(t("tier_"+tier))} <span>${got.length}/${ids.length}</span></h4>
+      <div class="pbadges">${got.map(i=>`<span class="badge on t-${tier} mini" title="${esc(badgeTxt(i)[0])}"><i class="bico" aria-hidden="true"><i class="bface">${BADGE_ICON[i]||"★"}</i></i><b>${esc(badgeTxt(i)[0])}</b></span>`).join("")}</div>`}).join("");
+  const recent=(d.history||[]).filter(g=>g.mode!=="party").slice(0,5).map(g=>`<tr><td>${esc(new Date(g.t).toLocaleDateString(LOCALE,{day:"numeric",month:"short"}))}</td><td>${esc(modeLabel(g.mode))}</td><td class="num">${fmt(g.total)}</td></tr>`).join("");
+  dlg(`<div class="phead"><span class="pav">${esc(p.avatar)}</span><div><h3>${esc(p.name)}</h3><span class="note">${esc(t("ac_since",{d:new Date(p.created_at).toLocaleDateString(LOCALE,{month:"long",year:"numeric"})}))}</span></div></div>
+    <div class="pstats">
+      <div><b>${fmt(s.games)}</b><span>${esc(t("ac_games"))}</span></div>
+      <div><b>${fmt(s.best)}</b><span>${esc(t("ac_best"))}</span></div>
+      <div><b>${s.visited}/${SITES.length}</b><span>${esc(t("ac_visited"))}</span></div>
+      <div><b>${s.countries}</b><span>${esc(t("ac_countries"))}</span></div>
+      <div><b>${s.streak}</b><span>${esc(t("ac_streak"))}</span></div>
+      <div><b>${s.badges}/${BADGES.length}</b><span>${esc(t("badges"))}</span></div>
+    </div>
+    ${tierRow||`<p class="note">${esc(t("ac_nobadges"))}</p>`}
+    ${recent?`<h4 class="ph4">${esc(t("ac_recent"))}</h4><table class="ptable"><tbody>${recent}</tbody></table>`:""}`);
+}
+
+/* ---------- home page boxes ---------- */
+function renderAccount(){
+  const box=$("#acct");if(!box)return;
+  if(!sb){box.hidden=true;$("#playersSec").hidden=true;return}
+  box.hidden=false;
+  if(!me){box.innerHTML=`<span class="aav">👤</span><div class="acctxt"><b>${esc(t("ac_out_h"))}</b><span class="note">${esc(t("ac_out_p"))}</span></div><button class="ghostbtn" id="acctIn">${esc(t("ac_in"))}</button>`;
+    $("#acctIn").onclick=signInDlg;return}
+  const p=myProfile||{name:me.email||"",avatar:"👤"};
+  box.innerHTML=`<span class="aav">${esc(p.avatar)}</span><div class="acctxt"><b>${esc(p.name)}</b><span class="note" id="acctSync">${syncState?esc(t("ac_"+syncState)):""}</span></div><button class="ghostbtn" id="acctEdit">${esc(t("ac_profile"))}</button>`;
+  $("#acctEdit").onclick=()=>profileDlg(false);
+}
+async function renderPlayers(){
+  const box=$("#playersSec");if(!box)return;
+  if(!sb||!me){box.hidden=true;return}
+  box.hidden=false;const list=$("#playersBox");
+  try{
+    if(!playersCache){
+      const [pr,pd]=await Promise.all([sb.from("profiles").select("id,name,avatar,created_at"),sb.from("player_data").select("user_id,summary")]);
+      if(pr.error)throw pr.error;const sm=new Map((pd.data||[]).map(r=>[r.user_id,r.summary||{}]));
+      playersCache=pr.data.map(p=>({...p,s:sm.get(p.id)||{}})).sort((a,b)=>(b.s.badges||0)-(a.s.badges||0)||(b.s.best||0)-(a.s.best||0));
+    }
+    list.innerHTML=playersCache.length?`<div class="plist">${playersCache.map(p=>{const s=p.s,tr=s.tiers||{};
+      return `<button class="prow" data-id="${esc(p.id)}"><span class="pav">${esc(p.avatar)}</span><span class="pname"><b>${esc(p.name)}</b>${p.id===me.id?` <em>${esc(t("ac_you"))}</em>`:""}
+        <span class="note">${esc(t("ac_row",{g:fmt(s.games||0),v:s.visited||0,n:SITES.length}))}</span></span>
+        <span class="ptiers">${["al","au","ag","cu"].map(k=>`<span class="pt t-${k}"><i class="tdot"></i>${tr[k]||0}</span>`).join("")}</span></button>`}).join("")}</div>`
+      :`<p class="note">${esc(t("ac_noplayers"))}</p>`;
+    list.querySelectorAll(".prow").forEach(b=>b.onclick=()=>playerDlg(b.dataset.id));
+  }catch(e){list.innerHTML=`<p class="note">${esc(t("ac_offline"))}</p>`}
+}
+/* stats box: when signed in, show the totals from every device */
+function statsForHome(){return me&&cloudStats?sumStats({...cloudStats,[DEVICE]:store.json("hg-stats",null)}):store.json("hg-stats",null)}
+
+/* ---------- start-up ---------- */
+async function setUser(u){
+  const was=me&&me.id;me=u;
+  if(!u){myProfile=null;cloudStats=null;playersCache=null;setSync("");renderAccount();renderPlayers();if(!$("#start").hidden)renderHome();return}
+  if(was===u.id)return;
+  const {data}=await sb.from("profiles").select("*").eq("id",u.id).maybeSingle();
+  myProfile=data||null;renderAccount();
+  if(!myProfile)profileDlg(true);else syncNow();
+  renderPlayers();
+}
+(function initAccounts(){
+  $("#dlgWrap").addEventListener("click",e=>{if(e.target.id==="dlgWrap")closeDlg()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#dlgWrap").hidden)closeDlg()});
+  try{
+    if(!window.supabase||!window.supabase.createClient){renderAccount();return}
+    sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{flowType:"implicit",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    sb.auth.onAuthStateChange((ev,session)=>{setTimeout(()=>setUser(session?session.user:null),0)});
+    renderAccount();
+    addEventListener("online",()=>{if(syncState==="offline")syncNow()});
+  }catch(e){console.warn("accounts",e);sb=null;renderAccount()}
+})();
 
 /* ===================== LAYOUT ===================== */
 /* Spot buttons: centred, but on phones held sideways and small tablets the map in the bottom-right
