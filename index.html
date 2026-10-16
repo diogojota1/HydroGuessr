@@ -132,7 +132,37 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 .opts button.wrong{border-color:var(--bad);color:var(--bad)}
 .share{font-family:var(--f-mono);font-size:13px;white-space:pre-wrap;background:var(--panel2);border:1px solid var(--rule);border-radius:8px;padding:10px;user-select:all}
 .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.badge{border:1px solid var(--rule);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:2px}
+.badge{border:1px solid var(--rule);border-radius:8px;padding:10px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.badge > div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.badge .bico{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:19px;line-height:1;background:var(--panel2);border:1px solid var(--rule)}
+.badge.on .bico{border-color:var(--accent)}
+.badge.off .bico{filter:grayscale(1);opacity:.55}
+.badge .btier{font-size:10.5px!important;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.badge.on.t-au{border-color:#C9A227}.badge.on.t-ag{border-color:#C9CDD2}.badge.on.t-cu{border-color:#B07A4A}.badge.on.t-al{border-color:#7FA3C0}
+.badge.on .bico{border:0}
+.bcount{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:0;margin-left:6px}
+.tierh{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:14px 0 8px}
+.tierh span{color:var(--muted);letter-spacing:.04em}
+.tierh .tdot{width:12px;height:12px;border-radius:50%;display:inline-block}
+#badgeBox > .note{margin:-4px 0 8px}
+/* metal frames: the emoji sits on a medal. Bronze, silver and gold are round; aluminium is a hexagon */
+.bico{position:relative;overflow:hidden}
+.bico .bface{font-style:normal;position:relative;z-index:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.t-cu .bico,.t-cu .tdot,.tchip.t-cu::before{background:radial-gradient(circle at 35% 30%,#F1C39A 0%,#C98B57 38%,#8A552C 100%)}
+.t-ag .bico,.t-ag .tdot,.tchip.t-ag::before{background:linear-gradient(135deg,#FFFFFF 0%,#E4E6E8 30%,#B9BDC2 48%,#F7F8F9 62%,#C7CBD0 100%)}
+.t-au .bico,.t-au .tdot,.tchip.t-au::before{background:radial-gradient(circle at 35% 30%,#FFF3B0 0%,#F2C94C 40%,#A97C0F 100%)}
+.t-al .bico,.t-al .tdot,.tchip.t-al::before{
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 1px,rgba(0,0,0,.07) 1px 2px),linear-gradient(180deg,#D3DEE8 0%,#9FB0BF 55%,#7D8E9D 100%)}
+.t-al .bico{border-radius:0;clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);width:38px;height:36px;
+  box-shadow:inset 0 0 0 2px #E5482F}
+.t-al .tdot{border-radius:0;clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%)}
+.badge.on.t-al .bico::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.65) 48%,transparent 66%);
+  transform:translateX(-120%);animation:alshine 3.6s ease-in-out infinite}
+@keyframes alshine{0%,55%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
+@media (prefers-reduced-motion:reduce){.badge.on.t-al .bico::after{animation:none;display:none}}
+.tchip::before{content:"";width:10px;height:10px;border-radius:50%;display:inline-block}
+.tchip.t-al::before{border-radius:0;clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);width:11px}
+#toast[data-tier="au"]{border-color:#F2C94C}#toast[data-tier="ag"]{border-color:#D5D9DD}#toast[data-tier="cu"]{border-color:#C98B57}#toast[data-tier="al"]{border-color:#9FB0BF;box-shadow:0 0 0 1px #E5482F,0 10px 30px rgba(0,0,0,.4)}
 .badge b{font-size:14px}
 .badge span{font-size:12.5px;color:var(--muted)}
 .badge.off{opacity:.45}
@@ -428,6 +458,11 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
       <div class="chips hsf" id="hsFilter"></div>
       <div id="hsBox"></div>
     </div>
+    <div class="box" id="badgesSec">
+      <h2><span data-i18n="badges"></span> <span class="bcount" id="badgeCount"></span></h2>
+      <div class="chips hsf" id="badgeFilter"></div>
+      <div id="badgeBox"></div>
+    </div>
     <div class="box" id="history">
       <h2 data-i18n="your_games"></h2>
       <div id="histSum"></div>
@@ -438,10 +473,6 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
       <h2 data-i18n="your_stats"></h2>
       <div id="statsBox"></div>
       <div class="links"><button id="statsClear" hidden data-i18n="st_clear"></button></div>
-    </div>
-    <div class="box">
-      <h2 data-i18n="badges"></h2>
-      <div class="badges" id="badgeBox"></div>
     </div>
     <div class="foot">
       <p data-i18n-html="foot1"></p>
@@ -585,6 +616,10 @@ const STR={
  again:["Play again","Spill igjen"],again_daily:["Play again (practice)","Spill igjen (øving)"],home:["Back to start","Tilbake til start"],
  explore_after:["Explore all Hydro locations","Utforsk alle Hydro-stedene"],
  badge_earned:["Badge earned: {b}","Nytt merke: {b}"],
+ tier_al:["Aluminium","Aluminium"],tier_au:["Gold","Gull"],tier_ag:["Silver","Sølv"],tier_cu:["Bronze","Bronse"],
+ bf_all:["All","Alle"],bf_on:["Earned","Oppnådd"],bf_off:["Not yet","Ikke ennå"],
+ badge_none:["No badges here yet — keep playing!","Ingen merker her ennå – fortsett å spille!"],
+ tier_al_note:["Rarer than gold — just as aluminium was in the 1850s.","Sjeldnere enn gull – akkurat som aluminium var på 1850-tallet."],
  /* explore */
  x_title:["All Hydro locations","Alle Hydro-stedene"],x_close:["Close map","Lukk kartet"],x_played:["You've played here","Du har spilt her"],
  x_loading:["Loading the map…","Laster kartet …"]
@@ -608,7 +643,17 @@ const BADGE_NO={bullseye:["Blinkskudd","Gjett innenfor 1 km"],sharp:["Skarpskytt
  insider:["Hydro-innsider","Få 5 bonuser for forretningsområde i ett spill"],globe:["Globetrotter","5 land og 15 000+ poeng i ett spill"],
  sight:["Severdighetsjeger","20 000+ poeng i Termitt Turist med 5 runder"],quick:["Lynrask","3 000+ poeng på under 8 sekunder i Blitz 15 eller Blitz 30"],
  near:["Nesten perfekt","5 250+ poeng i én runde"],streak:["Daglig vane","Spill dagens utfordring 3 dager på rad"],
- party:["Gruppespillvinner","Vinn et gruppespill"],marathon:["Maraton","Spill 50 runder totalt"]};
+ party:["Gruppespillvinner","Vinn et gruppespill"],marathon:["Maraton","Spill 50 runder totalt"],
+ mine2market:["Fra gruve til marked","Bauksitt, smelteverk, pressverk og gjenvinning i ett spill"],
+ flawless:["Feilfri","25 000+ poeng i et spill med 5 runder"],hemisphere:["Feil halvkule","Gjett mer enn 15 000 km unna"],
+ atlas:["Atlas","Spill Hydro-steder i 20 land"],pins:["Nålesamler","Besøk 100 Hydro-steder"],
+ complete:["Sett alt","Besøk alle Hydro-stedene i spillet"],
+ a_M:["Elektrolysepilegrim","Besøk alle Aluminium Metal-steder"],a_B:["Rødjordsvandrer","Besøk alle Bauxite & Alumina-steder"],
+ a_E:["Pressmester","Besøk alle Extrusions-steder"],a_R:["Evig kretsløp","Besøk alle Recycling-steder"],
+ a_P:["Fossehvisker","Besøk alle Energy-steder"],a_O:["Hjørnekontoret","Besøk alle kontorer"],
+ radio:["Lokal frekvens","Få et Hydro-sted mens nærmeste Radio Hydro-stasjon spiller"],
+ knowall:["Allvitende","Les dagens fakta 30 dager"],weekly:["Fast inventar","Spill dagens utfordring 7 dager på rad"],
+ shift3:["Treskift","15 000+ på dagens utfordring 3 dager på rad"],cast3:["Kontinuerlig støping","20 000+ på dagens utfordring 3 dager på rad"]};
 const FACTS_NO={
 "Årdal":"Produserte over 200 000 tonn primæraluminium i 2023, og har et av Hydros forskningssentre.",
 "Høyanger":"Verket kom til Hydro i 1986 sammen med Årdal og Sunndal Verk. Tettstedet vokste fram rundt verket ved Sognefjorden.",
@@ -1597,15 +1642,34 @@ const BAD=new Set(store.json("hg-bad",[]));
 function reportPano(id){if(!id)return;BAD.add(id);store.put("hg-bad",[...BAD].slice(-2000))}
 
 /* ===================== BADGES & STATS ===================== */
-const BADGES=["bullseye","sharp","fjord","insider","globe","sight","quick","near","streak","party","marathon"].map(id=>({id}));
+const BADGE_ICON={bullseye:"🎯",sharp:"🏹",fjord:"🏔️",insider:"🗝️",globe:"🌍",sight:"📸",quick:"⚡",near:"💎",streak:"📅",party:"🎉",marathon:"🏃",
+  mine2market:"🔗",flawless:"💯",hemisphere:"🙃",atlas:"🗺️",pins:"📍",complete:"🏆",
+  a_M:"🏭",a_B:"🪨",a_E:"📏",a_R:"♻️",a_P:"💧",a_O:"🏢",radio:"📻",knowall:"💡",weekly:"🗓️",shift3:"⏰",cast3:"🔥"};
+/* tiers, rarest first. Aluminium sits above gold: in the 1850s it was the more precious metal. */
+const TIERS=[["al",["flawless","complete","a_E"]],
+  ["au",["bullseye","near","mine2market","cast3","pins","a_M","a_R","a_O"]],
+  ["ag",["insider","quick","globe","fjord","sight","radio","weekly","shift3","knowall","atlas","a_P","a_B"]],
+  ["cu",["sharp","hemisphere","streak","party","marathon"]]];
+const BADGES=TIERS.flatMap(([tier,ids])=>ids.map(id=>({id,tier})));
+const tierOf=id=>(BADGES.find(b=>b.id===id)||{}).tier||"cu";
 const BADGE_EN={bullseye:["Bullseye","Guess within 1 km"],sharp:["Sharpshooter","Guess within 10 km"],fjord:["Fjord expert","3 Norway rounds within 25 km in one game"],
  insider:["Hydro insider","Get 5 bonus questions right in one game"],globe:["Globetrotter","5 countries and 15,000+ points in one game"],
  sight:["Sightseer","Score 20,000+ in a 5-round Tinfoil Tourist game"],quick:["Quick draw","3,000+ points in under 8 seconds in Blitz 15 or Blitz 30"],
  near:["Almost perfect","5,250+ points in a single round"],streak:["Daily habit","Play the daily challenge 3 days in a row"],
- party:["Party champion","Win a party game"],marathon:["Marathon","Play 50 rounds in total"]};
+ party:["Party champion","Win a party game"],marathon:["Marathon","Play 50 rounds in total"],
+ mine2market:["Mine to Market","A bauxite, smelter, extrusion and recycling site in one game"],
+ flawless:["Flawless","25,000+ points in a 5-round game"],hemisphere:["Wrong Hemisphere","Guess more than 15,000 km away"],
+ atlas:["Atlas","Play Hydro locations in 20 countries"],pins:["Pin Collector","Visit 100 Hydro locations"],
+ complete:["Completionist","Visit all Hydro locations in the game"],
+ a_M:["Potline Pilgrim","Visit every Aluminium Metal site"],a_B:["Red Earth Ranger","Visit every Bauxite & Alumina site"],
+ a_E:["Die Hard","Visit every Extrusions site"],a_R:["Infinite Loop","Visit every Recycling site"],
+ a_P:["Waterfall Whisperer","Visit every Energy site"],a_O:["Corner Office","Visit every Office location"],
+ radio:["Local Frequency","Get a Hydro site while its nearest Radio Hydro station is playing"],
+ knowall:["Know-it-all","Read the fact of the day on 30 days"],weekly:["Weekly Regular","Play the daily challenge 7 days in a row"],
+ shift3:["Triple Shift","15,000+ on the daily challenge 3 days in a row"],cast3:["Continuous Casting","20,000+ on the daily challenge 3 days in a row"]};
 const badgeTxt=id=>(LANG==="no"?BADGE_NO:BADGE_EN)[id];
 const earned=()=>store.json("hg-badges",{});
-function award(id){const b=earned();if(b[id])return;b[id]=today();store.put("hg-badges",b);const n=badgeTxt(id)[0];toast(t("badge_earned",{b:n}));G&&G.newBadges.push(n)}
+function award(id){const b=earned();if(b[id])return;b[id]=today();store.put("hg-badges",b);const n=badgeTxt(id)[0];toast(t("badge_earned",{b:t("tier_"+tierOf(id))+" · "+n}));$("#toast").dataset.tier=tierOf(id);clearTimeout(award.t);award.t=setTimeout(()=>delete $("#toast").dataset.tier,3700);G&&G.newBadges.push(n)}
 function recordStats(results){
   const st=store.json("hg-stats",{rounds:0,dist:0,pts:0,bonus:0,reg:{}});
   results.forEach(r=>{st.rounds++;st.pts+=r.pts;if(r.bonusOk)st.bonus++;
@@ -1616,7 +1680,43 @@ const seen=new Set(store.json("hg-seen",[]));
 const tseen=store.json("hg-tseen",{});
 function markTour(s,pts){tseen[s.town]=Math.max(tseen[s.town]||0,pts||0);store.put("hg-tseen",tseen)}
 function markSeen(s){if(s.tour)return;seen.add(s.town);store.put("hg-seen",[...seen])}
+/* collection badges: counted from the Hydro locations a player has had in a round (tourist rounds count their nearest site) */
+function checkCollection(){
+  const vis=SITES.filter(x=>seen.has(x.town));
+  if(new Set(vis.map(x=>x.country)).size>=20)award("atlas");
+  if(vis.length>=100)award("pins");
+  if(vis.length>=SITES.length)award("complete");
+  for(const a of Object.keys(AREAS)){const all=SITES.filter(x=>x.area===a);if(all.length&&all.every(x=>seen.has(x.town)))award("a_"+a)}
+}
+/* Local Frequency: the station playing is the closest Radio Hydro station to this round's site (within 500 km) */
+function checkRadioBadge(site){
+  try{
+    if(!radio.cur||!radio.audio||radio.audio.paused)return;
+    let best=null,bd=Infinity;
+    for(const st of STATIONS){const h=byTown(st.site);if(!h)continue;const d=km({lat:site.lat,lng:site.lon},{lat:h.lat,lng:h.lon});if(d<bd){bd=d;best=st}}
+    if(best&&best.id===radio.cur&&bd<=500)award("radio");
+  }catch(e){}
+}
+/* daily challenge totals on the last n days, today included */
+function dailyRun(n,min){for(let k=0;k<n;k++){const r=store.json("hg-daily-"+today(Date.now()-k*864e5),null);if(!r||!r.done||!(r.total>=min))return false}return true}
 
+let badgeF=store.get("hg-badgef")||"all";
+function renderBadges(){
+  const b=earned(),opts=["all","on","off","al","au","ag","cu"];
+  if(!opts.includes(badgeF))badgeF="all";
+  $("#badgeCount").textContent=`${BADGES.filter(d=>b[d.id]).length}/${BADGES.length}`;
+  $("#badgeFilter").innerHTML=opts.map(o=>`<button class="chipbtn${o.length===2&&o!=="on"?" tchip t-"+o:""}" data-f="${o}" aria-pressed="${badgeF===o}">${esc(o.length===2&&o!=="on"?t("tier_"+o):t("bf_"+o))}</button>`).join("");
+  $("#badgeFilter").querySelectorAll("button").forEach(x=>x.onclick=()=>{badgeF=x.dataset.f;store.set("hg-badgef",badgeF);renderBadges()});
+  const card=d=>{const [n,ds]=badgeTxt(d.id),on=!!b[d.id];
+    return `<div class="badge ${on?"on":"off"} t-${d.tier}"><i class="bico" aria-hidden="true"><i class="bface">${BADGE_ICON[d.id]||"★"}</i></i><div><b>${esc(n)}</b><span class="btier">${esc(t("tier_"+d.tier))}</span><span>${esc(ds)}</span></div></div>`};
+  const html=TIERS.map(([tier,ids])=>{
+    if(["al","au","ag","cu"].includes(badgeF)&&badgeF!==tier)return "";
+    const list=BADGES.filter(d=>d.tier===tier&&(badgeF==="on"?b[d.id]:badgeF==="off"?!b[d.id]:true));
+    if(!list.length)return "";
+    const got=BADGES.filter(d=>d.tier===tier&&b[d.id]).length,tot=ids.length;
+    return `<h3 class="tierh t-${tier}"><i class="tdot"></i>${esc(t("tier_"+tier))} <span>${got}/${tot}</span></h3>${tier==="al"?`<p class="note">${esc(t("tier_al_note"))}</p>`:""}<div class="badges">${list.map(card).join("")}</div>`}).join("");
+  $("#badgeBox").innerHTML=html||`<p class="note">${esc(t("badge_none"))}</p>`;
+}
 function renderHome(){
   const st=store.json("hg-stats",null);
   $("#statsClear").hidden=!(st&&st.rounds);
@@ -1634,7 +1734,7 @@ function renderHome(){
   }
   renderHistory();
   const b=earned();
-  $("#badgeBox").innerHTML=BADGES.map(d=>{const [n,ds]=badgeTxt(d.id);return `<div class="badge ${b[d.id]?"on":"off"}"><b>${b[d.id]?"★ ":""}${esc(n)}</b><span>${esc(ds)}</span></div>`}).join("");
+  renderBadges();
   const dr=store.json("hg-daily-"+today(),null),streak=store.json("hg-streak",{n:0,last:""});
   $("#dailyDone").textContent=dr?t("daily_played",{pts:fmt(dr.total)})+(streak.n>1?" · "+t("streak_n",{n:streak.n}):""):streak.n>1&&streak.last?t("streak_keep",{n:streak.n}):"";
 }
@@ -2088,7 +2188,7 @@ function answer(k,btn){
     rec.total=rec.rounds.reduce((a,x)=>a+x.pts,0);store.put(key,rec)}
   setTimeout(()=>{
     $("#modal").hidden=true;$("#scrim").hidden=true;
-    if(r.d!=null&&r.d<1)award("bullseye");if(r.d!=null&&r.d<10)award("sharp");if(r.pts>=5250)award("near");
+    if(r.d!=null&&r.d<1)award("bullseye");if(r.d!=null&&r.d<10)award("sharp");if(r.pts>=5250)award("near");if(r.d!=null&&r.d>15000)award("hemisphere");
     if(G.blitzSec&&r.elapsed!=null&&r.elapsed<8&&r.pts>=3000)award("quick");
     if(G.pIdx<G.players.length-1){G.pIdx++;handoff()}else reveal();
   },!G.bonus?0:ok?700:1300);
@@ -2112,6 +2212,7 @@ function reveal(){
   G.phase="result";clearOverlays();
   const s=G.cur.site,c=G.cur,last=G.round>=G.rounds||!G.queue.length;
   markSeen(s);if(s.tour){markSeen(s.near);markTour(s,Math.max(0,...c.guesses.map(g=>g&&g.pts||0)))}
+  if(G.players.length===1){checkCollection();if(!s.tour)checkRadioBadge(s)}
   document.body.classList.add("resultmode");$("#dock").hidden=false;$("#dock").classList.remove("mapopen");
   ["#hintBtn","#hintTxt","#turns","#timerBox","#playerChip"].forEach(x=>$(x).hidden=true);
   gmap.setOptions({draggableCursor:null});fit(drawRound(s,c.spot,c.guesses));
@@ -2167,13 +2268,16 @@ function finish(){
     if(res.filter(r=>r.bonusOk).length>=5)award("insider");
     if(new Set(res.map(r=>r.site.country)).size>=5&&tt>=15000)award("globe");
     if(G.mode==="tourist"&&res.length>=5&&tt>=20000)award("sight");
+    if(res.length===5&&tt>=25000)award("flawless");
+    {const ar=new Set(res.filter(r=>!r.site.tour).map(r=>r.site.area));if(["B","M","E","R"].every(a=>ar.has(a)))award("mine2market")}
     const st=recordStats(res);if(st.rounds>=50)award("marathon");
     if(G.mode==="daily"){
       const d=today(),key="hg-daily-"+d;
       const rec=store.json(key,{rounds:[]});G.dailyRecorded=!!rec.done;
       if(!rec.done){rec.total=tt;rec.sq=res.map(r=>square(r.pts)).join("");rec.done=true;store.put(key,rec);
         const s=store.json("hg-streak",{n:0,last:""}),y=today(Date.now()-864e5);
-        s.n=s.last===y?s.n+1:s.last===d?s.n:1;s.last=d;store.put("hg-streak",s);if(s.n>=3)award("streak")}
+        s.n=s.last===y?s.n+1:s.last===d?s.n:1;s.last=d;store.put("hg-streak",s);if(s.n>=3)award("streak");if(s.n>=7)award("weekly");
+        if(dailyRun(3,15000))award("shift3");if(dailyRun(3,20000))award("cast3")}
     }
   }else{
     const ranked=G.players.map((p,i)=>({p,i,t:tot(p)})).sort((a,b)=>b.t-a.t);
@@ -2508,6 +2612,7 @@ async function showFact(auto){
     $("#factTxt").textContent=LANG==="no"?no:en;
     $("#factDate").textContent=new Date().toLocaleDateString(LOCALE,{day:"numeric",month:"long",year:"numeric"});
     $("#factWrap").hidden=false;store.set("hg-fact-seen",today());
+    {const fd=store.json("hg-fact-days",[]);if(!fd.includes(today())){fd.push(today());store.put("hg-fact-days",fd.slice(-400))}if(fd.length>=30)award("knowall")}
     setTimeout(()=>$("#factOk").focus(),30);
   }catch(e){$("#factBtn").hidden=true}
 }
