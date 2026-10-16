@@ -513,17 +513,28 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
 
     <button class="primary" id="startBtn" data-i18n="start"></button>
     <p class="err" id="err" hidden></p>
-    <div class="onlinebox" id="onlineBox" hidden>
-      <span class="fl" data-i18n="on_h"></span>
-      <p class="note" data-i18n="on_p"></p>
-      <div class="onbtns"><button class="ghostbtn" id="onCreate" data-i18n="on_create"></button><button class="ghostbtn" id="onJoin" data-i18n="on_joinbtn"></button></div>
-      <p class="note" id="onPartyNote" data-i18n="on_noparty" hidden></p>
-    </div>
     <p class="note" id="count"></p>
 
     <div class="box">
       <button class="ghostbtn" id="exploreBtn" data-i18n="explore_btn"></button>
       <p class="note" data-i18n="explore_note"></p>
+    </div>
+    <div class="box onlinesec" id="onlineBox" hidden>
+      <h2 data-i18n="on_h"></h2>
+      <p class="note" data-i18n="on_p"></p>
+      <div class="onbtns"><button class="ghostbtn" id="onCreate" data-i18n="on_create"></button><button class="ghostbtn" id="onJoin" data-i18n="on_joinbtn"></button></div>
+      <p class="note" id="onPartyNote" data-i18n="on_noparty" hidden></p>
+    </div>
+    <div class="box" id="leaguesSec" hidden>
+      <h2 data-i18n="lg_h"></h2>
+      <p class="note" data-i18n="lg_p"></p>
+      <div id="leaguesBox"></div>
+      <div class="onbtns"><button class="ghostbtn" id="lgCreate" data-i18n="lg_newbtn"></button><button class="ghostbtn" id="lgJoin" data-i18n="lg_joinbtn"></button></div>
+    </div>
+    <div class="box" id="playersSec" hidden>
+      <h2 data-i18n="players_h"></h2>
+      <p class="note" data-i18n="players_note"></p>
+      <div id="playersBox"></div>
     </div>
     <div class="box" id="highscores">
       <h2 data-i18n="hs_title"></h2>
@@ -540,17 +551,6 @@ th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu
       <div id="histSum"></div>
       <div id="histBox"></div>
       <div class="links"><button id="histMore" hidden></button><button id="histClear" hidden data-i18n="h_clear"></button></div>
-    </div>
-    <div class="box" id="leaguesSec" hidden>
-      <h2 data-i18n="lg_h"></h2>
-      <p class="note" data-i18n="lg_p"></p>
-      <div id="leaguesBox"></div>
-      <div class="onbtns"><button class="ghostbtn" id="lgCreate" data-i18n="lg_newbtn"></button><button class="ghostbtn" id="lgJoin" data-i18n="lg_joinbtn"></button></div>
-    </div>
-    <div class="box" id="playersSec" hidden>
-      <h2 data-i18n="players_h"></h2>
-      <p class="note" data-i18n="players_note"></p>
-      <div id="playersBox"></div>
     </div>
     <div class="box">
       <h2 data-i18n="your_stats"></h2>
@@ -715,7 +715,7 @@ const STR={
  lg_rule:["Points are the sum of each player's daily challenge scores between the league's dates. Only the first try each day counts.","Poengene er summen av hver spillers poeng i dagens utfordring mellom ligaens datoer. Bare første forsøk hver dag teller."],
  lg_edit:["Edit league","Endre ligaen"],lg_delete:["Delete league","Slett ligaen"],lg_delete_sure:["Tap again to delete the league for everyone","Trykk igjen for å slette ligaen for alle"],
  lg_leave:["Leave league","Forlat ligaen"],lg_leave_sure:["Tap again to leave","Trykk igjen for å forlate"],
- on_h:["Play online","Spill på nett"],on_p:["Play the selected mode together with others, each on your own device. Everyone needs to be signed in.","Spill valgt modus sammen med andre, hver på sin enhet. Alle må være logget inn."],
+ on_h:["Play online","Spill på nett"],on_p:["Play the mode and settings selected above together with others, each on your own device. Everyone needs to be signed in.","Spill modusen og innstillingene du har valgt over, sammen med andre, hver på sin enhet. Alle må være logget inn."],
  on_create:["Create online game","Opprett nettspill"],on_joinbtn:["Join with code","Bli med med kode"],on_noparty:["Party mode is played on one screen, so it isn't available online.","Gruppespill spilles på én skjerm og finnes derfor ikke på nett."],
  on_kicker:["Online game","Nettspill"],on_join_h:["Join an online game","Bli med i et nettspill"],on_join_p:["Type the 5-character code from the person hosting the game.","Skriv inn koden på 5 tegn fra den som har opprettet spillet."],
  on_join:["Join","Bli med"],on_lobby_host:["Waiting for players","Venter på spillere"],on_lobby:["You're in!","Du er med!"],on_code:["Game code","Spillkode"],
@@ -742,10 +742,10 @@ const STR={
  ac_welcome:["Welcome!","Velkommen!"],ac_setup_h:["Choose your player name","Velg spillernavn"],ac_edit_h:["Your profile","Profilen din"],
  ac_name:["Display name","Visningsnavn"],ac_name_ph:["e.g. Karin","f.eks. Karin"],ac_avatar:["Avatar","Avatar"],ac_save:["Save","Lagre"],
  ac_signout:["Sign out","Logg ut"],ac_delete:["Delete account","Slett konto"],ac_delete_sure:["Tap again to delete for good","Trykk igjen for å slette for godt"],
- ac_deleted:["Account deleted. Your progress is still saved in this browser.","Kontoen er slettet. Fremgangen din er fortsatt lagret i denne nettleseren."],
+ ac_deleted:["Account deleted. You are now playing as a guest again.","Kontoen er slettet. Du spiller nå som gjest igjen."],
  ac_since:["Playing since {d}","Spiller siden {d}"],ac_games:["games","spill"],ac_best:["best score","beste poengsum"],ac_visited:["locations","steder"],
  ac_countries:["countries","land"],ac_streak:["daily streak","daglig rekke"],ac_nobadges:["No badges yet.","Ingen merker ennå."],ac_recent:["Recent games","Siste spill"],
- ac_out_h:["Play with an account","Spill med konto"],ac_out_p:["Save your progress across devices and see other players' profiles.","Lagre fremgangen på alle enhetene dine og se andre spilleres profiler."],
+ ac_out_h:["Play with an account","Spill med konto"],ac_out_p:["Save your progress to your own profile on all your devices, and see other players' profiles. Progress from playing as a guest stays in this browser.","Lagre fremgangen i din egen profil på alle enhetene dine, og se andre spilleres profiler. Fremgang fra spill som gjest blir værende i denne nettleseren."],
  ac_in:["Sign in","Logg inn"],ac_profile:["Profile","Profil"],ac_saving:["Saving…","Lagrer …"],ac_saved:["Progress saved","Fremgang lagret"],
  ac_offline:["Offline. Progress will be saved when you're back online.","Frakoblet. Fremgangen lagres når du er på nett igjen."],
  ac_you:["you","deg"],ac_row:["{g} games · {v}/{n} locations","{g} spill · {v}/{n} steder"],ac_noplayers:["No players yet.","Ingen spillere ennå."],
@@ -2748,8 +2748,7 @@ function openRadio(){
 $("#radioBtn").onclick=openRadio;$("#radioHome").onclick=openRadio;$("#rClose").onclick=()=>$("#radio").hidden=true;
 $("#rVol").oninput=e=>{store.set("hg-radio-vol",e.target.value);if(radio.audio)radio.audio.volume=+e.target.value};
 document.addEventListener("pointerdown",e=>{const r=$("#radio");if(!r.hidden&&!r.contains(e.target)&&!e.target.closest("#radioBtn,#radioHome"))r.hidden=true});
-/* the radio was on last time: browsers only allow sound after a tap, so resume on the first one */
-if(radio.wantOn){const resume=()=>{document.removeEventListener("pointerdown",resume,true);if(radio.wantOn&&!radio.cur)playRadio(radio.station)};document.addEventListener("pointerdown",resume,true)}
+/* the radio only plays after the player taps a station (it never resumes on its own) */
 renderRadio();
 
 /* ===================== ACCESS CODE ===================== */
@@ -2926,7 +2925,7 @@ function profileDlg(first){
     if(error){const x=$("#pfErr");x.textContent=t("ac_fail");x.hidden=false;return}
     myProfile=data;playersCache=null;closeDlg();renderAccount();renderPlayers();renderLeagues();renderOnlineBox();if(first)syncNow()};
   if(!first){
-    $("#pfOut").onclick=async()=>{await sb.auth.signOut();closeDlg()};
+    $("#pfOut").onclick=async()=>{clearTimeout(syncTimer);await syncNow();await sb.auth.signOut();closeDlg()};
     $("#pfDel").onclick=async e=>{const b=e.target;if(!b.dataset.armed){b.dataset.armed=1;b.textContent=t("ac_delete_sure");return}
       const {error}=await sb.rpc("delete_my_account");if(error){const x=$("#pfErr");x.textContent=t("ac_fail");x.hidden=false;return}
       await sb.auth.signOut();closeDlg();toast(t("ac_deleted"))};
@@ -2987,8 +2986,30 @@ async function renderPlayers(){
 function statsForHome(){return me&&cloudStats?sumStats({...cloudStats,[DEVICE]:store.json("hg-stats",null)}):store.json("hg-stats",null)}
 
 /* ---------- start-up ---------- */
+/* Guest progress and account progress never mix. While someone is signed in, this browser's game data belongs to
+   that account (marked by hg-owner) and the guest's own progress is put aside in hg-guestdata. Signing out removes the
+   account's copy and brings the guest's progress back. */
+const DATA_RE=/^hg-(badges|history|seen|tseen|stats|streak|fact-days|daily-\d{4}-\d{2}-\d{2})$/;
+function dataKeys(){const ks=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(DATA_RE.test(k))ks.push(k)}}catch(e){}return ks}
+function clearData(){dataKeys().forEach(k=>{try{localStorage.removeItem(k)}catch(e){}})}
+function stashGuest(){const o={};dataKeys().forEach(k=>o[k]=store.get(k));store.put("hg-guestdata",o);clearData()}
+function restoreGuest(){clearData();const o=store.json("hg-guestdata",{});applying=true;try{for(const[k,v]of Object.entries(o))if(DATA_RE.test(k)&&v!=null)store.set(k,v)}finally{applying=false}
+  try{localStorage.removeItem("hg-guestdata")}catch(e){}}
+function reloadMemory(){seen.clear();store.json("hg-seen",[]).forEach(x=>seen.add(x));Object.keys(tseen).forEach(k=>delete tseen[k]);Object.assign(tseen,store.json("hg-tseen",{}))}
+function switchOwner(uid){
+  const owner=store.get("hg-owner")||"";if(owner===(uid||""))return false;
+  applying=true;
+  try{
+    if(uid){if(!owner)stashGuest();else clearData();store.set("hg-owner",uid)}   /* guest -> account, or another account -> this one */
+    else{restoreGuest();try{localStorage.removeItem("hg-owner")}catch(e){}}     /* account -> guest */
+  }finally{applying=false}
+  reloadMemory();cloudStats=null;
+  if(!$("#start").hidden)renderHome();
+  return true;
+}
 async function setUser(u){
   const was=me&&me.id;me=u;
+  switchOwner(u?u.id:null);
   if(!u){onlineLeave();myProfile=null;cloudStats=null;playersCache=null;leaguesCache=null;setSync("");renderAccount();renderPlayers();renderLeagues();renderOnlineBox();if(!$("#start").hidden)renderHome();return}
   if(was===u.id)return;
   /* remember the game language on the account, so the next sign-in email comes in the same language */
