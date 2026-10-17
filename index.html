@@ -361,6 +361,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
 .iw details p{margin:6px 0 2px;font-size:13px;line-height:1.45}.iw .iwm{color:#5b6b78;font-size:12px}
 .iw{color:#15212B;max-width:260px;font:13.5px/1.45 var(--f-body);padding-bottom:4px}
 .iwh{color:#15212B;font:700 15px/1.3 var(--f-body);padding-top:10px;max-width:240px}
+.wx{font-weight:500;font-size:.8em;white-space:nowrap;opacity:.9;margin-left:2px}.iwh .wx{font-size:13px;color:#3A4A57}
 .gm-style .gm-style-iw-c{padding-top:0}.gm-style .gm-style-iw-ch{padding-top:0}
 .iw b{font-size:15px}.iw .iwm{color:#5A6A77;font-size:12.5px}.iw ul{margin:6px 0;padding-left:16px}.iw p{margin:6px 0 0}
 #reportBtn{color:var(--muted)}
@@ -603,6 +604,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <p data-i18n-html="foot1"></p>
       <p data-i18n="foot2"></p>
       <p data-i18n="foot3"></p>
+      <p data-i18n-html="foot_wx"></p>
       <p class="ver" id="appVer"></p>
     </div>
   </div>
@@ -676,6 +678,11 @@ const STR={
  foot1:["<b style=\"color:var(--ink)\">Disclaimer:</b> HydroGuessr is an unofficial game. It is not developed, endorsed or supported by Norsk Hydro ASA and is not intended for public use or distribution. Location names come from public pages on hydro.com, and positions are approximate.",
   "<b style=\"color:var(--ink)\">Ansvarsfraskrivelse:</b> HydroGuessr er et uoffisielt spill. Det er ikke utviklet, godkjent eller støttet av Norsk Hydro ASA, og er ikke ment for offentlig bruk eller distribusjon. Stedsnavnene kommer fra offentlige sider på hydro.com, og posisjonene er omtrentlige."],
  foot3:["Front-page photos © Hydro. Photographers: Anders Vindegg and Hans Fredrik Asbjørnsen.","Bilder på forsiden © Hydro. Fotografer: Anders Vindegg og Hans Fredrik Asbjørnsen."],
+ foot_wx:["Weather data by <a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo.com</a> (CC BY 4.0).","Værdata fra <a href=\"https://open-meteo.com/\" target=\"_blank\" rel=\"noopener\">Open-Meteo.com</a> (CC BY 4.0)."],
+ wx_now:["Weather right now","Været akkurat nå"],
+ wx_0:["Clear","Klart"],wx_1:["Mainly clear","Lettskyet"],wx_2:["Partly cloudy","Delvis skyet"],wx_3:["Overcast","Overskyet"],wx_fog:["Fog","Tåke"],
+ wx_drizzle:["Drizzle","Yr"],wx_rain:["Rain","Regn"],wx_frz:["Freezing rain","Underkjølt regn"],wx_snow:["Snow","Snø"],wx_shower:["Rain showers","Regnbyger"],
+ wx_sshower:["Snow showers","Snøbyger"],wx_thunder:["Thunderstorm","Torden"],
  foot2:["Street View imagery and maps © Google. Your API key, scores and badges stay in this browser.","Street View-bilder og kart © Google. API-nøkkelen, poengene og merkene dine blir i denne nettleseren."],
  radio_btn:["Radio Hydro","Radio Hydro"],radio_title:["Radio Hydro","Radio Hydro"],
  r_hidden:["{n} more off air right now.","{n} til er ikke på lufta akkurat nå."],r_hidden1:["1 more off air right now.","1 til er ikke på lufta akkurat nå."],
@@ -844,7 +851,7 @@ const BADGE_NO={bullseye:["Blinkskudd","Gjett innenfor 1 km"],sharp:["Skarpskytt
  drift:["Kontinentaldrift","Severdigheter på alle fem kontinenter i ett spill Folieturisten"],
  mk:["Magnus og Karin","Gjett Sunndalsøra og Vækerø innenfor 5 km hver i samme spill"],
  b67:["67","En poengsum for spillet som slutter på 67"],ultra:["Ultramaraton","Spill 250 runder totalt"],ironman:["Iron Man","Spill 500 runder totalt"],
- kante:["N'Golo Kanté","Spill 1 000 runder totalt"],local:["Lokalkjent","25 000+ i Folieturisten med 5 runder"],klink:["Klink","5 490+ poeng i én runde*"],
+ kante:["N'Golo Kanté","Spill 1 000 runder totalt"],local:["Lokalkjent","25 000+ i Folieturisten med 5 runder"],klink:["Klink i krysset","5 490+ poeng i én runde*"],
  burner:["Etterbrenner","5 000+ poeng på under 5 sekunder i Blitz 15 eller Blitz 30*"]};
 const FACTS_NO={
 "Årdal":"Produserte over 200 000 tonn primæraluminium i 2023, og har et av Hydros forskningssentre.",
@@ -1862,7 +1869,7 @@ const BADGE_EN={bullseye:["Bullseye","Guess within 1 km"],sharp:["Sharpshooter",
  drift:["Continental Drift","Attractions on all five continents in one Tinfoil Tourist game"],
  mk:["Magnus and Karin","Guess Sunndalsøra and Vækerø within 5 km each in the same game"],
  b67:["67","A game score that ends in 67"],ultra:["Ultramarathon","Play 250 rounds in total"],ironman:["Iron Man","Play 500 rounds in total"],
- kante:["N'Golo Kanté","Play 1,000 rounds in total"],local:["Local","25,000+ in a 5-round Tinfoil Tourist game"],klink:["Klink","5,490+ points in a single round*"],
+ kante:["N'Golo Kanté","Play 1,000 rounds in total"],local:["Local","25,000+ in a 5-round Tinfoil Tourist game"],klink:["Top Bins","5,490+ points in a single round*"],
  burner:["Afterburner","5,000+ points in under 5 seconds in Blitz 15 or Blitz 30*"]};
 const badgeTxt=id=>(LANG==="no"?BADGE_NO:BADGE_EN)[id];
 const earned=()=>store.json("hg-badges",{});
@@ -2385,6 +2392,7 @@ function beginTurn(){
 function showView(){
   const sp=G.cur.spot;$("#photoMsg").hidden=true;
   pano.setPano(sp.pano);
+  try{const st=G.cur.site;wxGet([{lat:st.lat,lng:st.lon}])}catch(e){}   /* fetched now, shown only after the guess */
   pano.setPov({heading:((G.cur.heading%360)+360)%360,pitch:G.cur.pitch||0});pano.setZoom(sp.fixed&&sp.z?sp.z:0);
   pano.setOptions({linksControl:G.turning,clickToGo:G.turning});pano.setVisible(true);
 }
@@ -2522,13 +2530,13 @@ function reveal(){
   const fact=factOf(s);
   const body=s.tour?`
     <div class="tags"><span class="tag a">${areaN("T")}</span><span class="tag">${esc(countryN(s.country))}</span></div>
-    <h3>${esc(siteName(s))}</h3>
+    <h3>${esc(siteName(s))} ${wxSpan(s.lat,s.lon)}</h3>
     <p class="fact">${esc(descOf(s))}</p>
     <p style="font-size:14px">${t("closest",{n:esc(s.near.town),d:fmtKm(s.nearKm),a:esc(areaN(s.near.area))})}</p>
     <ul class="units">${s.near.units.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>${legend}`
    :`
     <div class="tags"><span class="tag a">${areaN(s.area)}</span><span class="tag">${esc(countryN(s.country))}</span></div>
-    <h3>${esc(s.town)}</h3>
+    <h3>${esc(s.town)} ${wxSpan(s.lat,s.lon)}</h3>
     <ul class="units">${s.units.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>
     ${SITE_INFO[s.town]?siteInfoHtml(s):fact?`<p class="fact">${esc(fact)}</p>`:""}
     <p class="note">${t("photo_from",{d:fmtKm(r.fromSite)})}</p>${legend}`;
@@ -2541,7 +2549,7 @@ function reveal(){
       <a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lon}" target="_blank" rel="noopener">${t("gm_link")}</a>
     </div>
     <button class="primary" id="next">${last?t("final_score"):t("next_round")}</button>`;
-  $("#result").hidden=false;
+  $("#result").hidden=false;wxFill($("#result"));
   $("#next").onclick=()=>last?finish():nextRound();$("#result").scrollTop=0;$("#next").focus({preventScroll:true});
 }
 
@@ -2654,10 +2662,51 @@ function goHome(){stopTimer();clearOverlays();if(G&&G.online)onlineLeave();G=nul
 const AREA_COLORS={M:"#E5482F",B:"#D9A13B",E:"#4FA3E0",R:"#5CC48A",P:"#B892FF",O:"#C9D1D7"};
 const TOUR_COLOR="#F2C14E";
 let xmap=null,xMarkers=[],xInfo=null,xShow=new Set([...Object.keys(AREA_COLORS),"T"]);
-function iwOpen(title,body,anchor){
+function iwOpen(title,body,anchor,ll){
   const h=document.createElement("div");h.className="iwh";h.textContent=title;
+  if(ll){h.insertAdjacentHTML("beforeend"," "+wxSpan(ll.lat,ll.lng));wxFill(h)}
   if(xInfo.setHeaderContent)xInfo.setHeaderContent(h);else if(xInfo.setOptions)xInfo.setOptions({headerContent:h});
   xInfo.setContent(`<div class="iw">${body}</div>`);xInfo.open({map:xmap,anchor});
+}
+/* ===================== WEATHER =====================
+   Current temperature and conditions from Open-Meteo (free for non-commercial use, no key). Fetched in the background
+   and only shown once a location has been revealed (or on the map), so it never gives an answer away or slows a round.
+   Several places go in one request; results are kept for 30 minutes. */
+const WX=store.json("hg-wx",{}),WX_TTL=30*60e3,wxPend=new Map();
+const wxKey=(lat,lng)=>(+lat).toFixed(2)+","+(+lng).toFixed(2);
+function wxSave(){try{const ks=Object.keys(WX).filter(k=>Date.now()-WX[k].at<WX_TTL);const o={};ks.slice(-300).forEach(k=>o[k]=WX[k]);store.put("hg-wx",o)}catch(e){}}
+function wxBatch(keys){
+  const p=(async()=>{
+    const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);
+    try{
+      const la=keys.map(k=>k.split(",")[0]).join(","),lo=keys.map(k=>k.split(",")[1]).join(",");
+      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&current=temperature_2m,weather_code,is_day&timezone=GMT`,{signal:ctl.signal});
+      if(!r.ok)return;let d=await r.json();if(!Array.isArray(d))d=[d];
+      d.forEach((x,i)=>{const c=x&&x.current;if(c&&keys[i]&&typeof c.temperature_2m==="number")WX[keys[i]]={t:c.temperature_2m,c:c.weather_code,day:c.is_day!==0,at:Date.now()}});
+      wxSave();
+    }catch(e){}finally{clearTimeout(tm);keys.forEach(k=>wxPend.delete(k))}
+  })();
+  keys.forEach(k=>wxPend.set(k,p));return p;
+}
+async function wxGet(points){
+  const keys=[...new Set(points.map(p=>wxKey(p.lat,p.lng)))];
+  const need=keys.filter(k=>!(WX[k]&&Date.now()-WX[k].at<WX_TTL)&&!wxPend.has(k));
+  for(let i=0;i<need.length;i+=100)wxBatch(need.slice(i,i+100));
+  await Promise.all(keys.map(k=>wxPend.get(k)).filter(Boolean));
+}
+function wxIcon(c,day){
+  if(c===0)return [day?"☀️":"🌙","wx_0"];if(c===1)return [day?"🌤️":"🌙","wx_1"];if(c===2)return [day?"⛅":"☁️","wx_2"];if(c===3)return ["☁️","wx_3"];
+  if(c===45||c===48)return ["🌫️","wx_fog"];if(c>=51&&c<=55)return ["🌦️","wx_drizzle"];if(c===56||c===57||c===66||c===67)return ["🌧️","wx_frz"];
+  if(c>=61&&c<=65)return ["🌧️","wx_rain"];if(c>=71&&c<=77)return ["❄️","wx_snow"];if(c>=80&&c<=82)return ["🌦️","wx_shower"];
+  if(c===85||c===86)return ["🌨️","wx_sshower"];if(c>=95)return ["⛈️","wx_thunder"];return ["🌡️","wx_now"];
+}
+/* a placeholder that fills itself in when the weather arrives (stays empty if it doesn't) */
+const wxSpan=(lat,lng)=>`<span class="wx" data-ll="${wxKey(lat,lng)}" hidden></span>`;
+async function wxFill(root){
+  const els=[...(root||document).querySelectorAll(".wx[data-ll]")];if(!els.length)return;
+  await wxGet(els.map(e=>{const [lat,lng]=e.dataset.ll.split(",");return {lat,lng}}));
+  els.forEach(e=>{const w=WX[e.dataset.ll];if(!w)return;const [ic,k]=wxIcon(w.c,w.day),tmp=Math.round(w.t);
+    e.textContent=`${ic} ${tmp===0?0:tmp} °C`;e.title=`${t("wx_now")}: ${t(k)}, ${tmp} °C`;e.setAttribute("aria-label",e.title);e.hidden=false});
 }
 /* visited attractions close to each other (same city or area) share one dot */
 function tourGroups(km_=30){
@@ -2690,6 +2739,7 @@ function renderChips(){
 }
 async function openExplore(){
   $("#explore").hidden=false;renderChips();
+  wxGet(SITES.map(s=>({lat:s.lat,lng:s.lon})));   /* all locations in one go, so a tap on a dot shows the weather at once */
   if(!await ensureMaps()){$("#explore").hidden=true;return}
   if(!xmap){
     $("#xmap").innerHTML="";
@@ -2704,14 +2754,14 @@ async function openExplore(){
     marker.addListener("click",()=>{
       const f=factOf(s);
       iwOpen(s.town,`<span class="iwm">${esc(countryN(s.country))} · ${esc(areaN(s.area))}${seen.has(s.town)?" · "+esc(t("x_played")):""}</span>
-        <ul>${s.units.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>${f?`<p>${esc(f)}</p>`:""}`,marker);
+        <ul>${s.units.map(u=>`<li>${esc(u)}</li>`).join("")}</ul>${f?`<p>${esc(f)}</p>`:""}`,marker,{lat:s.lat,lng:s.lon});
     });
     xMarkers.push({marker,site:s});
   });
   tourGroups().forEach(g=>{
     const el=document.createElement("div");el.className="xpin tour";el.textContent=g.items.length>1?g.items.length:"";
     const marker=new Marker({map:xShow.has("T")?xmap:null,position:{lat:g.lat,lng:g.lng},content:el,title:g.items.map(a=>siteName(a)).join(", "),zIndex:5});
-    marker.addListener("click",()=>iwOpen(tourTitle(g),tourInfo(g),marker));
+    marker.addListener("click",()=>iwOpen(tourTitle(g),tourInfo(g),marker,{lat:g.lat,lng:g.lng}));
     xMarkers.push({marker,site:{area:"T"}});
   });
 }
