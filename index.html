@@ -380,6 +380,8 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
 .radio .rrow{display:flex;align-items:center;gap:10px;font-size:13px}.radio input[type=range]{flex:1}
 .radio .rclose{align-self:flex-end}
 #badgeFilter{flex-direction:column;align-items:flex-start;gap:8px}.fgroup{display:flex;flex-wrap:wrap;gap:6px}
+#statsBox tr.tot td{border-top:1px solid var(--rule)}
+.covlist{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:14px}
 .hsf{padding:0;margin:4px 0 10px}.hsf .chipbtn[aria-pressed="true"]{border-color:var(--accent);color:var(--ink)}
 .hsrow td{vertical-align:top}.hsrow .hsl{white-space:normal;font-family:var(--f-body)}.hsrow .note{display:block;font-size:12px;margin-top:2px}
 .radio ul{max-height:min(52vh,420px);overflow:auto}.radio li.rhid{border:0;padding:2px 10px;color:var(--muted)}
@@ -540,7 +542,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <h2 data-i18n="on_h"></h2>
       <p class="note" data-i18n="on_p"></p>
       <div class="onbtns"><button class="ghostbtn" id="onCreate" data-i18n="on_create"></button><button class="ghostbtn" id="onJoin" data-i18n="on_joinbtn"></button></div>
-      <p class="note" id="onPartyNote" data-i18n="on_noparty" hidden></p>
+      <p class="note" id="onPartyNote" hidden></p>
     </div>
     <div class="box" id="leaguesSec" hidden>
       <h2 data-i18n="lg_h"></h2>
@@ -565,6 +567,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     </div>
     <div class="box">
       <h2 data-i18n="your_stats"></h2>
+      <div class="chips hsf" id="statsTabs" hidden></div>
       <div id="statsBox"></div>
       <div class="links"><button id="statsClear" hidden data-i18n="st_clear"></button></div>
     </div>
@@ -719,7 +722,7 @@ const STR={
  explore_after:["Explore all Hydro locations","Utforsk alle Hydro-stedene"],
  badge_earned:["Badge earned: {b}","Nytt merke: {b}"],
  lg_h:["Daily challenge leagues","Ligaer for dagens utfordring"],lg_p:["Compete on the daily challenge over a set period. Everyone's daily score counts automatically.","Konkurrer i dagens utfordring over en valgt periode. Alles daglige poeng teller automatisk."],
- lg_newbtn:["Create league","Opprett liga"],lg_joinbtn:["Join with code","Bli med med kode"],lg_kicker:["League","Liga"],
+ lg_newbtn:["Create league","Opprett liga"],lg_joinbtn:["Join with code","Bli med"],lg_kicker:["League","Liga"],
  lg_new_h:["New league","Ny liga"],lg_new_p:["Choose a name and the dates. You'll get a code to share with the others.","Velg navn og datoer. Du får en kode du kan dele med de andre."],
  lg_name:["League name","Navn på ligaen"],lg_name_ph:["e.g. November league","f.eks. Novemberligaen"],lg_from:["From","Fra"],lg_to:["To","Til"],
  lg_create:["Create league","Opprett liga"],lg_bad_dates:["Check the name and dates: the end can't be before the start.","Sjekk navn og datoer: slutten kan ikke være før starten."],
@@ -734,7 +737,12 @@ const STR={
  lg_edit:["Edit league","Endre ligaen"],lg_delete:["Delete league","Slett ligaen"],lg_delete_sure:["Tap again to delete the league for everyone","Trykk igjen for å slette ligaen for alle"],
  lg_leave:["Leave league","Forlat ligaen"],lg_leave_sure:["Tap again to leave","Trykk igjen for å forlate"],
  on_h:["Play online","Spill på nett"],on_p:["Play the mode and settings selected above together with others, each on your own device. Everyone needs to be signed in.","Spill modusen og innstillingene du har valgt over, sammen med andre, hver på sin enhet. Alle må være logget inn."],
- on_create:["Create online game","Opprett nettspill"],on_joinbtn:["Join with code","Bli med med kode"],on_noparty:["Party mode is played on one screen, so it isn't available online.","Gruppespill spilles på én skjerm og finnes derfor ikke på nett."],
+ on_create:["Create online game","Opprett nettspill"],on_nodaily:["The daily challenge is played on your own, so it isn't available online. Pick another mode to play online.","Dagens utfordring spilles alene og finnes derfor ikke på nett. Velg en annen modus for å spille på nett."],
+ st_tab_all:["All games","Alle spill"],st_tab_on:["Online","På nett"],st_on_mode:["Mode","Modus"],st_on_played:["Played","Spilt"],st_on_wins:["Wins","Seire"],st_on_rate:["Win rate","Vinnerandel"],st_on_total:["Total","Totalt"],
+ st_on_empty:["Play an online game and your games, wins and win rate per mode will show up here.","Spill et nettspill, så dukker spill, seire og vinnerandel per modus opp her."],
+ st_on_note:["A win is a game where you finish with the highest score once everyone is done (a shared top score counts as a win). Leaving before the others finish counts as played but not won.","En seier er et spill der du har høyest poengsum når alle er ferdige (delt førsteplass teller som seier). Går du ut før de andre er ferdige, teller spillet som spilt, men ikke vunnet."],
+ cov_h:["Street View coverage","Street View-dekning"],cov_run:["Checking {i} of {n}…","Sjekker {i} av {n} …"],cov_ok:["{n} of {m} locations have Street View within 5 km.","{n} av {m} lokasjoner har Street View innenfor 5 km."],
+ cov_bad:["No Street View within 5 km:","Ingen Street View innenfor 5 km:"],cov_near:["nearest {d}","nærmeste {d}"],cov_none:["none within 40 km","ingen innenfor 40 km"],on_joinbtn:["Join with code","Bli med"],on_noparty:["Party mode is played on one screen, so it isn't available online.","Gruppespill spilles på én skjerm og finnes derfor ikke på nett."],
  on_kicker:["Online game","Nettspill"],on_join_h:["Join an online game","Bli med i et nettspill"],on_join_p:["Type the 5-character code from the person hosting the game.","Skriv inn koden på 5 tegn fra den som har opprettet spillet."],
  on_join:["Join","Bli med"],on_lobby_host:["Waiting for players","Venter på spillere"],on_lobby:["You're in!","Du er med!"],on_code:["Game code","Spillkode"],
  on_waiting_host:["Connecting to the game…","Kobler til spillet …"],on_host:["host","vert"],on_need2:["Waiting for at least one more player","Venter på minst én spiller til"],
@@ -1908,10 +1916,38 @@ function renderBadges(){
     return `<h3 class="tierh t-${tier}"><i class="tdot"></i>${esc(t("tier_"+tier))} <span>${got}/${tot}</span></h3>${tier==="al"?`<p class="note">${esc(t("tier_al_note"))}</p>`:""}<div class="badges">${list.map(card).join("")}</div>`}).join("");
   $("#badgeBox").innerHTML=(html||`<p class="note">${esc(t("badge_none"))}</p>`)+`<p class="note brule">${esc(t("badge_rule"))}</p>`;
 }
+/* online results: one entry per online game (keyed by the game's shared seed), so every device adds up the same games */
+const ON_MODES=["classic","extrusion","tourist","blitz15","blitz"];
+let statsTab=store.get("hg-stats-tab")||"all";
+function onlineResults(){return store.json("hg-online",{})}
+function mergeOnline(a,b){const m={...(a||{})};for(const[k,v]of Object.entries(b||{})){if(!v)continue;const c=m[k];if(!c||(!c.done&&v.done)||(c.done===v.done&&v.win&&!c.win))m[k]=v}
+  const ks=Object.keys(m);if(ks.length>3000)ks.sort((x,y)=>(m[x].t||0)-(m[y].t||0)).slice(0,ks.length-3000).forEach(k=>delete m[k]);return m}
+function onlineRecord(){
+  if(!G||!G.online||!ON||!ON.seed||!ON.cfg||G.phase!=="final")return;
+  const rows=onlineTotals(G.rounds),allDone=rows.every(x=>x.left||x.n>=G.round),mine=rows.find(x=>x.id===me.id);if(!mine)return;
+  const all=onlineResults(),cur=all[ON.seed];if(cur&&cur.done)return;
+  const win=allDone&&mine.tot>=Math.max(...rows.map(x=>x.tot));
+  const e={t:cur?cur.t:Date.now(),mode:ON.cfg.mode,win,done:allDone};
+  if(cur&&cur.done===e.done&&cur.win===e.win)return;
+  all[ON.seed]=e;store.put("hg-online",all);
+}
+function renderOnlineStats(){
+  const all=Object.values(onlineResults()).filter(x=>x&&ON_MODES.includes(x.mode));
+  if(!all.length){$("#statsBox").innerHTML=`<p class="note">${esc(t("st_on_empty"))}</p>`;return}
+  const row=(label,list,b)=>{const w=list.filter(x=>x.win).length;
+    return `<tr${b?' class="tot"':""}><td>${b?`<b>${esc(label)}</b>`:esc(label)}</td><td class="num">${fmt(list.length)}</td><td class="num">${fmt(w)}</td><td class="num">${list.length?Math.round(w/list.length*100)+"%":"–"}</td></tr>`};
+  $("#statsBox").innerHTML=`<table><thead><tr><th>${esc(t("st_on_mode"))}</th><th class="num">${esc(t("st_on_played"))}</th><th class="num">${esc(t("st_on_wins"))}</th><th class="num">${esc(t("st_on_rate"))}</th></tr></thead><tbody>
+    ${ON_MODES.map(m=>row(modeLabel(m),all.filter(x=>x.mode===m))).join("")}${row(t("st_on_total"),all,true)}</tbody></table><p class="note">${esc(t("st_on_note"))}</p>`;
+}
 function renderHome(){
   const st=statsForHome();
-  $("#statsClear").hidden=!(st&&st.rounds);
-  if(!st||!st.rounds){$("#statsBox").innerHTML=`<p class="note">${t("st_empty")}</p>`}
+  const tabs=$("#statsTabs"),showTabs=!!(me&&myProfile);if(!showTabs&&statsTab!=="all")statsTab="all";
+  tabs.hidden=!showTabs;
+  if(showTabs){tabs.innerHTML=["all","on"].map(k=>`<button class="chipbtn" data-k="${k}" aria-pressed="${statsTab===k}">${esc(t("st_tab_"+k))}</button>`).join("");
+    tabs.querySelectorAll("button").forEach(b=>b.onclick=()=>{statsTab=b.dataset.k;store.set("hg-stats-tab",statsTab);renderHome()})}
+  $("#statsClear").hidden=!(st&&st.rounds)||statsTab==="on";
+  if(statsTab==="on")renderOnlineStats();
+  else if(!st||!st.rounds){$("#statsBox").innerHTML=`<p class="note">${t("st_empty")}</p>`}
   else{
     const regs=Object.entries(st.reg).filter(([,v])=>v.n>=3).map(([k,v])=>[k,v.dist/v.n]).sort((a,b)=>a[1]-b[1]);
     $("#statsBox").innerHTML=`<table><tbody>
@@ -2527,6 +2563,7 @@ function finish(){
   $("#exploreAfter").onclick=openExplore;
   if($("#again"))$("#again").onclick=startGame;
   $("#home").onclick=goHome;
+  if(G.online&&G.phase==="final")onlineRecord();
 }
 /* today's daily challenge, played: show every round on the map with the answers and score */
 async function reviewDaily(){
@@ -2758,6 +2795,10 @@ async function loadHls(){
   await new Promise((ok,no)=>{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.6.0/hls.min.js";sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
   return window.Hls;
 }
+/* iPhone/iPad (Safari 16.4+): "ambient" lets music from other apps keep playing while the game is open.
+   Only when the player taps a station does the page ask for "playback", like a normal radio app. */
+function audioMode(m){try{if(navigator.audioSession&&navigator.audioSession.type!==m)navigator.audioSession.type=m}catch(e){}}
+audioMode("ambient");
 async function playRadio(id,from){
   const st=STATIONS.find(x=>x.id===id);if(!st)return;
   stopRadio(true);
@@ -2778,6 +2819,7 @@ async function playRadio(id,from){
   try{
     if(info.hls&&!a.canPlayType("application/vnd.apple.mpegurl")){const H=await loadHls();radio.hls=new H();radio.hls.loadSource(info.url);radio.hls.attachMedia(a)}
     else a.src=info.url;
+    audioMode("playback");
     await a.play();
     if(info.uuid)rbGet("/json/url/"+info.uuid);   /* counts the play in the directory, as it asks apps to */
   }catch(e){if(e&&e.name!=="AbortError")fail()}
@@ -2785,7 +2827,7 @@ async function playRadio(id,from){
 function stopRadio(keep){
   if(radio.hls){try{radio.hls.destroy()}catch(e){}radio.hls=null}
   if(radio.audio){radio.audio.onerror=null;radio.audio.onplaying=null;radio.audio.pause();radio.audio.removeAttribute("src");try{radio.audio.load()}catch(e){}}
-  radio.cur=null;if(!keep){radio.wantOn=false;store.set("hg-radio-on","0")}renderRadio();
+  radio.cur=null;if(!keep){radio.wantOn=false;store.set("hg-radio-on","0");audioMode("ambient")}renderRadio();
 }
 function openRadio(){
   const r=$("#radio");if(!r.hidden){r.hidden=true;return}
@@ -2863,7 +2905,7 @@ function localDaily(){
 }
 function localData(){
   return {badges:earned(),history:store.json("hg-history",[]),seen:[...seen],tseen:{...tseen},daily:localDaily(),
-    fact_days:store.json("hg-fact-days",[]),stats:{[DEVICE]:store.json("hg-stats",null)}};
+    fact_days:store.json("hg-fact-days",[]),stats:{[DEVICE]:store.json("hg-stats",null),_online:onlineResults()}};
 }
 function mergeData(a,b){
   a=a||{};b=b||{};const m={};
@@ -2874,7 +2916,8 @@ function mergeData(a,b){
   m.tseen={...(a.tseen||{})};for(const[k,v]of Object.entries(b.tseen||{}))m.tseen[k]=Math.max(m.tseen[k]||0,v||0);
   m.daily={...(a.daily||{})};for(const[k,v]of Object.entries(b.daily||{}))if(!m.daily[k]||(!m.daily[k].done&&v&&v.done))m.daily[k]=v;
   m.fact_days=[...new Set([...(a.fact_days||[]),...(b.fact_days||[])])].sort().slice(-400);
-  m.stats={...(a.stats||{})};for(const[k,v]of Object.entries(b.stats||{}))if(v&&(!m.stats[k]||(v.rounds||0)>=(m.stats[k].rounds||0)))m.stats[k]=v;   /* counters only grow */
+  m.stats={...(a.stats||{})};for(const[k,v]of Object.entries(b.stats||{}))if(k[0]!=="_"&&v&&(!m.stats[k]||(v.rounds||0)>=(m.stats[k].rounds||0)))m.stats[k]=v;   /* counters only grow */
+  m.stats._online=mergeOnline((a.stats||{})._online,(b.stats||{})._online);   /* online results: one entry per game */
   return m;
 }
 function streakFrom(daily){
@@ -2884,7 +2927,7 @@ function streakFrom(daily){
 }
 function sumStats(by){
   const out={rounds:0,games:0,dist:0,pts:0,bonus:0,reg:{}};
-  Object.values(by||{}).forEach(s=>{if(!s)return;out.rounds+=s.rounds||0;out.games+=s.games||0;out.dist+=s.dist||0;out.pts+=s.pts||0;out.bonus+=s.bonus||0;
+  Object.entries(by||{}).forEach(([k,s])=>{if(!s||k[0]==="_")return;out.rounds+=s.rounds||0;out.games+=s.games||0;out.dist+=s.dist||0;out.pts+=s.pts||0;out.bonus+=s.bonus||0;
     for(const[k,v]of Object.entries(s.reg||{})){out.reg[k]=out.reg[k]||{n:0,dist:0};out.reg[k].n+=v.n||0;out.reg[k].dist+=v.dist||0}});
   return out;
 }
@@ -2897,7 +2940,7 @@ function applyData(m){
     for(const[d,r]of Object.entries(m.daily)){const k="hg-daily-"+d,cur=store.json(k,null);if(!cur||(!cur.done&&r.done))store.put(k,r)}
     store.put("hg-fact-days",m.fact_days);
     const s=streakFrom(m.daily),cur=store.json("hg-streak",{n:0,last:""});if(s.last>cur.last||(s.last===cur.last&&s.n>cur.n))store.put("hg-streak",s);
-    cloudStats=m.stats;
+    cloudStats=m.stats;store.put("hg-online",mergeOnline(onlineResults(),m.stats._online));
     {const mine=m.stats&&m.stats[DEVICE],loc=store.json("hg-stats",null);if(mine&&(!loc||(loc.rounds||0)<(mine.rounds||0)))store.put("hg-stats",mine)}
   }finally{applying=false}
 }
@@ -2924,7 +2967,7 @@ async function syncNow(){
   finally{syncBusy=false}
 }
 function scheduleSync(){if(!sb||!me||applying)return;clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,1500)}
-{const put=store.put;store.put=function(k,v){put.call(this,k,v);if(/^hg-(badges|history|seen|tseen|daily-|fact-days|stats)/.test(k))scheduleSync()}}
+{const put=store.put;store.put=function(k,v){put.call(this,k,v);if(/^hg-(badges|history|seen|tseen|daily-|fact-days|stats|online)/.test(k))scheduleSync()}}
 function setSync(s){syncState=s;const e=$("#acctSync");if(e)e.textContent=s?t("ac_"+s):""}
 
 /* ---------- dialogs ---------- */
@@ -3041,7 +3084,7 @@ function statsForHome(){
 /* Guest progress and account progress never mix. While someone is signed in, this browser's game data belongs to
    that account (marked by hg-owner) and the guest's own progress is put aside in hg-guestdata. Signing out removes the
    account's copy and brings the guest's progress back. */
-const DATA_RE=/^hg-(badges|history|seen|tseen|stats|streak|fact-days|daily-\d{4}-\d{2}-\d{2})$/;
+const DATA_RE=/^hg-(badges|history|seen|tseen|stats|online|streak|fact-days|daily-\d{4}-\d{2}-\d{2})$/;
 function dataKeys(){const ks=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(DATA_RE.test(k))ks.push(k)}}catch(e){}return ks}
 function clearData(){dataKeys().forEach(k=>{try{localStorage.removeItem(k)}catch(e){}})}
 function stashGuest(){const o={};dataKeys().forEach(k=>o[k]=store.get(k));store.put("hg-guestdata",o);clearData()}
@@ -3226,7 +3269,7 @@ function onCfgText(c){if(!c)return "";const parts=[modeLabel(c.mode)];
   return parts.join(" · ")}
 function onlineCreate(){
   if(!me||!myProfile){signInDlg();return}
-  if(MODE==="party"){toast(t("on_noparty"));return}
+  if(MODE==="party"||MODE==="daily"){toast(t(MODE==="daily"?"on_nodaily":"on_noparty"));return}
   onlineOpen(onCode(),true,onCfgFromSetup());
 }
 function onlineJoinDlg(){
@@ -3306,7 +3349,7 @@ function onlineCheck(){
   if(!ON||!G||!G.online)return;
   if(G.phase==="waiting")onlineMaybeReveal();
   else if(G.phase==="result"){const e=$("#onTable");if(e)e.innerHTML=onlineTableHtml(G.round)}
-  else if(G.phase==="final"){const e=$("#onFinal");if(e)e.innerHTML=onlineFinalHtml()}
+  else if(G.phase==="final"){const e=$("#onFinal");if(e)e.innerHTML=onlineFinalHtml();onlineRecord()}
 }
 function onlineMaybeReveal(){
   const missing=onlineActive().filter(id=>!(ON.res[id]&&ON.res[id][G.round]));
@@ -3345,9 +3388,10 @@ function onlineLeave(){
 function renderOnlineBox(){
   const box=$("#onlineBox");if(!box)return;
   box.hidden=!(sb&&me&&myProfile);
-  $("#onCreate").disabled=MODE==="party";
+  const off=MODE==="party"||MODE==="daily";
+  $("#onCreate").disabled=off;
   $("#onCreate").onclick=onlineCreate;$("#onJoin").onclick=onlineJoinDlg;
-  $("#onPartyNote").hidden=MODE!=="party";
+  const n=$("#onPartyNote");n.hidden=!off;if(off)n.textContent=t(MODE==="daily"?"on_nodaily":"on_noparty");
 }
 
 /* shown at the bottom of the front page, so it's easy to check which version a browser is running */
@@ -3394,6 +3438,21 @@ document.addEventListener("keydown",e=>{
   if(e.key===" "&&G.guess){e.preventDefault();submit(false)}
 });
 setMode(MODE);renderHome();
+/* coverage check: open the game with #coverage at the end of the address to test every Hydro location
+   with the same Street View rules the game uses (Google's own outdoor imagery that links to a neighbour) */
+async function coverageCheck(){
+  if(!await ensureMaps())return;
+  dlg(`<span class="kicker">HydroGuessr</span><h3>${esc(t("cov_h"))}</h3><p class="dlgp" id="covP"></p><div id="covList"></div>`);
+  const bad=[];let ok=0;
+  for(let i=0;i<SITES.length;i++){const s=SITES[i],at={lat:s.lat,lng:s.lon};
+    const p=$("#covP");if(!p)return;p.textContent=t("cov_run",{i:i+1,n:SITES.length});
+    if(await look(at,5000))ok++;
+    else{const f=await look(at,40000);bad.push({s,d:f?km(at,f):null})}
+  }
+  $("#covP").textContent=t("cov_ok",{n:ok,m:SITES.length});
+  $("#covList").innerHTML=bad.length?`<p class="note">${esc(t("cov_bad"))}</p><ul class="covlist">${bad.map(x=>`<li><b>${esc(x.s.town)}</b>, ${esc(countryN(x.s.country))} · ${esc(x.d==null?t("cov_none"):t("cov_near",{d:fmtKm(x.d)}))}</li>`).join("")}</ul>`:"";
+}
+if(location.hash==="#coverage"&&store.get("hg-access")===String(ACCESS_HASH))setTimeout(coverageCheck,300);
 </script>
 </body>
 </html>
