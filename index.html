@@ -3080,6 +3080,11 @@ async function setUser(u){
     sb.auth.onAuthStateChange((ev,session)=>{setTimeout(()=>setUser(session?session.user:null),0)});
     renderAccount();
     addEventListener("online",()=>{if(syncState==="offline")syncNow()});
+    /* a tab left open (common on phones) fetches the latest progress from other devices when the player comes back to it */
+    let lastWake=0;
+    const wake=()=>{if(document.visibilityState!=="visible"||!me||!myProfile)return;const n=Date.now();if(n-lastWake<5000)return;lastWake=n;syncNow()};
+    document.addEventListener("visibilitychange",wake);addEventListener("pageshow",wake);addEventListener("focus",wake);
+    setInterval(()=>{if(document.visibilityState==="visible"&&me&&myProfile&&!$("#start").hidden)syncNow()},60000);
   }catch(e){console.warn("accounts",e);sb=null;renderAccount()}
 })();
 
